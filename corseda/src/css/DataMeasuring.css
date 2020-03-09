@@ -1,0 +1,312 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; 
+  }
+ 
+
+
+.DataMeasuring-content{
+    margin-top: 2.25em;
+    display: flex;
+     
+    margin-left: 80px;
+    margin-right: 80px;
+    border-radius: 20px;
+    height: 37.45em;
+}
+
+.DataMeasuring-content .col1{
+    
+    opacity: .7;
+    width: 10em;
+
+    border-radius: 20px;
+    
+    display: flex;
+    flex-direction: column;
+}
+
+.DataMeasuring-content .row1 button{
+    padding: 1em;
+    color: white;
+    
+    text-align: center;
+    font-family: "Helvetica";
+    font-size: 20px;
+
+    background-color: #458286;
+    opacity: .9;
+    border: 3px solid white;
+    width: 8em;
+    height: 4em;
+    border-radius: 20px;
+}
+.DataMeasuring-content .row1 button:hover {
+    background-color: #136A6F;
+    box-shadow: 0 20px 16px 0 rgba(1, 16, 20, 0.664), 0 6px 20px 0 rgba(0,0,0,0.19);
+
+}
+
+.DataMeasuring-content .col2 button{
+    
+    padding-top: 0.2em;
+    color: white;
+    position: relative;
+    text-align: center;
+    font-family: "Helvetica";
+    font-size: 20px;
+
+    background-color: #458286;
+    opacity: .9;
+    border: 3px solid white;
+    width: 4em;
+    height: 2em;
+    border-radius: 20px;
+}
+.DataMeasuring-content .col2 button:hover {
+    background-color: #136A6F;
+    box-shadow: 0 20px 16px 0 rgba(1, 16, 20, 0.664), 0 6px 20px 0 rgba(0,0,0,0.19);
+
+}
+
+.DataMeasuring-content .row1{
+    border-radius: 20px;
+    
+}
+
+.DataMeasuring-content .row2{
+    background-color: #458286;
+    opacity: .9;
+    text-align: center;
+    width: 10em;
+    margin-top: 1em;
+    height: 22em;
+    border-radius: 20px;
+    
+}
+.DataMeasuring-content .row2 h4{
+    padding: 0.3em;
+    color: white;
+    border-bottom:1px solid white;
+    text-align: center;
+    font-family: "Helvetica";
+    font-size: 12px;
+    
+}
+.DataMeasuring-content .col2{
+    background-color: #458286;
+    opacity: .7;
+    width: 50em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+    overflow-y: auto;
+    border-radius: 20px;
+}
+
+.DataMeasuring-content .col2 h4{
+    padding: 1em;
+    
+    color: white;
+    border-bottom:1px solid white;
+    text-align: center;
+    font-family: "Helvetica";
+    font-size: 16px; 
+}
+
+
+.DataMeasuring-content .col3{
+    background-color: #458286;
+    opacity: .9;
+    
+    height: 27em;
+    border-radius: 20px;
+}
+
+.col3 img{
+    height: 28em;
+    border-radius: 20px;
+}
+
+
+.DataMeasuring-footer .Copyright{
+    margin-left: 80px;
+    margin-right: 80px;
+    margin-top: 0.5em;
+    font-family: "Helvetica";
+    font-size: 11px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+
+.DataMeasuring-content .col2 .colA-red{
+    width: 50%;
+    font-size: 14px;
+    color:rgb(182, 13, 13);
+    border-bottom: 1px solid rgb(80, 174, 196);   
+    
+    font-family: "Helvetica";
+    overflow: hidden;
+    text-align: center;
+  }
+  .DataMeasuring-content .col2 .colB-red{
+  width: 50%;
+  font-size: 14px;
+  color:rgb(182, 13, 13);
+  border-bottom: 1px solid rgb(80, 174, 196);   
+  
+  font-family: "Helvetica";
+  overflow: hidden;
+  text-align: center;
+  }
+
+
+  .DataMeasuring-content .col3 .points-camera{
+    height: 1.5em;
+    width: 4.9em;
+    position: absolute;
+    top: 11.345em;
+    left: 87.5em;
+    display: inline-block;
+    border: 1px solid red;
+}
+.DataMeasuring-content .col3 .points-sonar{
+    height: 1.5em;
+    width: 4.9em;
+    position: absolute;
+    top: 17.5em;
+    left: 87.5em;
+    display: inline-block;
+    border: 1px solid red;
+}
+
+.DataMeasuring-content .col3 .points-battery{
+    height: 1.5em;
+    width: 3.4em;
+    position: absolute;
+    top: 21em;
+    left: 87.5em;
+    display: inline-block;
+    border: 1px solid red;
+}
+
+.DataMeasuring-content .col3 .points-foot-bumber{
+    height: 1.5em;
+    width: 5em;
+    position: absolute;
+    top: 35.6em;
+    left: 64.4em;
+    display: inline-block;
+    border: 1px solid red;
+}
+.DataMeasuring-content .col3 .points-head-tactiles{
+    height: 1.5em;
+    width: 6.4em;
+    position: absolute;
+    top: 8.4em;
+    left: 63.0em;
+    display: inline-block;
+    border: 1px solid red;
+}
+
+.DataMeasuring-content .col3 .points-hand-tactiles{
+    height: 1.5em;
+    width: 6.4em;
+    position: absolute;
+    top: 25em;
+    left: 87.5em;
+    display: inline-block;
+    border: 1px solid red;
+}
+
+.DataMeasuring-content .col3 .points-head-joints{
+    height: 1.5em;
+    width: 4.4em;
+    position: absolute;
+    top: 14em;
+    left: 65.0em;
+    display: inline-block;
+    border: 1px solid red;
+}
+
+.DataMeasuring-content .col3 .points-hip-joints{
+    height: 1.5em;
+    width: 3.7em;
+    position: absolute;
+    top: 22em;
+    left: 65.7em;
+    display: inline-block;
+    border: 1px solid red;
+}
+
+.DataMeasuring-content .col3 .points-knee-joints{
+    height: 1.5em;
+    width: 4.3em;
+    position: absolute;
+    top: 29.5em;
+    left: 87.5em;
+    display: inline-block;
+    border: 1px solid red;
+}
+
+.DataMeasuring-content .col3 .points-ankle-joints{
+    height: 1.5em;
+    width: 4.6em;
+    position: absolute;
+    top: 32.8em;
+    left: 64.7em;
+    display: inline-block;
+    border: 1px solid red;
+}
+
+.DataMeasuring-content .col3 .points-wrist-joints{
+    height: 1.5em;
+    width: 4.5em;
+    position: absolute;
+    top: 22.8em;
+    left: 87.5em;
+    display: inline-block;
+    border: 1px solid red;
+}
+
+.DataMeasuring-content .col3 .points-elbow-joints{
+    height: 1.5em;
+    width: 4.8em;
+    position: absolute;
+    top: 19.6em;
+    left: 87.5em;
+    display: inline-block;
+    border: 1px solid red;
+}
+
+.DataMeasuring-content .col3 .points-shoulder-joints{
+    height: 1.5em;
+    width: 6em;
+    position: absolute;
+    top: 14.6em;
+    left: 87.5em;
+    display: inline-block;
+    border: 1px solid red;
+}
+
+.DataMeasuring-content .col3 .points-acoustic-up-mics{
+    height: 2em;
+    width: 5.4em;
+    position: absolute;
+    top: 9em;
+    left: 87.5em;
+    display: inline-block;
+    border: 1px solid red;
+}
+
+.DataMeasuring-content .col3 .points-acoustic-down-mics{
+        height: 1.8em;
+        width: 6.6em;
+        position: absolute;
+        top: 12.9em;
+        left: 87.5em;
+        display: inline-block;
+        border: 1px solid red;
+}
+

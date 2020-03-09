@@ -1,0 +1,6 @@
+# Folders 
+
+thesisenv
+corseda .node_modules
+corseda/*.json
+corseda/README.md

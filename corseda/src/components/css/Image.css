@@ -1,0 +1,42 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; 
+  }
+  
+  .captured_image{
+    margin-left: 20%;
+    margin-top: 2em;
+    float: left;
+    width: 60%;
+}
+
+.captured_image p{
+    font-size: 14px;
+    text-decoration: none;
+    color:white;
+    border-bottom: 1px solid rgb(80, 174, 196);   
+    padding: 1em;
+    font-family: "Helvetica";
+   
+    text-align: center;
+}
+
+.captured_image img{
+    
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: scale-down;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.data{
+    width: 100%;
+    border-right: 1px solid white;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  
