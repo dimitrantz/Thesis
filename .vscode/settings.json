@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "thesisenv/bin/python3"
+    "python.pythonPath": "thesisenv/bin/python",
+    "python.linting.pylintArgs": ["--load-plugins", "pylint-flask"]
 }

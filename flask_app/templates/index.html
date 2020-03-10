@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+  
+    <title>Thesis: R4A Sensor Project</title>
+    <script type="text/javascript">
+      function httpGetAsync(theUrl, callback) {
+          var xmlHttp = new XMLHttpRequest();
+          xmlHttp.onreadystatechange = function() {
+              if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                  callback(xmlHttp.responseText);
+          }
+          xmlHttp.open("GET", theUrl, true); // true for asynchronous
+          xmlHttp.send(null);
+      }
+    </script>
+  </head>
+  <body style="background-color: white;">
+       
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"> </div>
+    
+    <p style="font-family: Helvetica;"> 
+      REST API, created using Flask - Python 2.7 | Thesis Ntzioni Dimitra @Aristotle University of Thessaloniki - February 2019
+      
+    </p>
+    <img src='{{url_for('get_logo')}}' alt="Logo"/>
+    <p style="font-family: Helvetica;"> 
+    To learn more about the project, enter this <a href="https://github.com/dimitrantz/Thesis">github link </a>
+     </p> 
+     
+    </body>
+</html>

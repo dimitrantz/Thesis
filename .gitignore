@@ -1,6 +1,11 @@
 # Folders 
-
-thesisenv
-corseda .node_modules
-corseda/*.json
-corseda/README.md
+corseda.node_modules 
+corseda/*.json 
+corseda/README.md 
+.DS_Store 
+.vscode
+.vscode/*.json
+flask_app/*.pyc 
+*.pyc 
+thesisenv 
+.env
