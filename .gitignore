@@ -6,6 +6,7 @@ corseda/README.md
 .vscode
 .vscode/*.json
 flask_app/*.pyc 
+flask_app/*.DS_Store 
 *.pyc 
 thesisenv 
 .env
