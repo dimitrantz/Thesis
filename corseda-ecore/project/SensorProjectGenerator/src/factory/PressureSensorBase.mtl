@@ -1,0 +1,90 @@
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module PressureSensorBase.
+ */]
+[module PressureSensorBase('platform:/plugin/SensorProject/model/sensorProject.ecore')]
+
+
+[**
+ * The documentation of the template generateElement.
+ * @param aSensorSystem
+ */]
+[template public PressureSensorBase(aSensorSystem: SensorSystem) post(trim())]
+
+[file ('factory/pressureSensor.py', false, 'UTF-8')]
+"""
+@author: Dimitra Ntzioni
+ python 2.7
+"""
+
+import time
+
+import saveToRedis as redisAPI
+from sensor import Sensor
+
+import R4ARobotRestApi as api # R4A Library
+from R4ARobotWsApi import RobotWsAPI as rws # R4A Library
+
+api.configuration.api_key['['/]'api_key'[']'/] = 'r4a_default_key'
+api.configuration.host = 'localhost:8080'
+    
+
+#  Pressure Sensors         
+class PressureSensor(Sensor):
+    '''Common base class for a PressureSensor'''
+	
+    def __init__(self):
+        
+        Sensor.__init__(self)
+        
+        self.category = 'PRESSURE'
+        self.controller = api.SensorsPressureApi()
+        self.name = 'PressureSensor'
+        self.type = 'RFoot_Bumper_Right'
+
+
+    def get_pressure_sensor(self):
+        '''Function returning a string containing the description of an
+           pressure sensor.'''
+        
+        res = self.controller.getPressureSensor(self.type)
+        redisAPI.save_sensor_info(self.name, res)
+
+    def get_pressure_measurement(self):
+        '''Function returning the last measurement of a sensor.'''
+                       
+        res = self.controller.getPressureMeasurement(self.type) 
+        
+        
+        if (hasattr(res, 'data')):
+
+            redisAPI.save_measurement(self.name,res)
+
+        elif (hasattr(res, 'error')):
+
+            redisAPI.save_measurement(self.name,{'data': res['['/]'error'[']'/], 'timestamp':res['['/]'timestamp'[']'/]})
+        
+        else:
+            
+            tempArray = ['['/]"ERROR Pressure Measurement",time.time()[']'/]
+            print tempArray
+
+    def start_measuring(self):
+        '''Gets a measurement of the pressure sensor every 1/max_hz seconds'''
+
+        endtime = time.time() + self.duration
+
+          
+        # timer's argument in sec
+        while time.time() < endtime:
+
+            start = time.time()
+            self.get_pressure_measurement()
+            time_elapsed = time.time() - start
+
+            if self.frequency > time_elapsed:
+                time.sleep(self.frequency - time_elapsed)  
+      
+
+[/file]
+[/template]

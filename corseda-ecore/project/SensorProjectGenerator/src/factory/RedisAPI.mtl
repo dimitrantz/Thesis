@@ -1,0 +1,166 @@
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module RedisAPI.
+ */]
+[module RedisAPI('platform:/plugin/SensorProject/model/sensorProject.ecore')]
+
+
+[**
+ * The documentation of the template RedisAPI.
+ * @param aSensorSystem
+ */]
+[template public RedisAPI(aSensorSystem: SensorSystem) post(trim())]
+
+[file ('factory/saveToRedis.py', false, 'UTF-8')]
+"""
+@author: Dimitra Ntzioni
+ python 2.7
+"""
+
+
+# Import the redis-py client package
+import redis
+from ast import literal_eval
+import StringIO
+import json
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+
+import wave, struct
+import scipy.io.wavfile
+# Define our connection information for Redis
+# Replaces with your configuration information
+redis_host = "localhost"
+redis_port = 6379
+redis_password = ""
+
+
+# General
+
+def delete_from_redis(key):
+
+    # Create the Redis Connection object
+    r = redis.StrictRedis(host=redis_host, port=redis_port,\
+                              password=redis_password, decode_responses=True)
+    r.delete(key)  
+
+
+def save_sensor_info(key, res):
+    '''Saves to redis the info of a sensor in a specific key: info_name'''
+    
+    # Create the Redis Connection object
+    try:    
+        # The decode_repsonses flag here directs the client to convert the 
+        # responses from Redis into Python strings using the default encoding 
+        # utf-8.  This is client specific.
+        r = redis.StrictRedis(host=redis_host, port=redis_port,\
+                              password=redis_password, decode_responses=True)
+       
+        new_key = 'info_' + key
+        r.delete(new_key) 
+        r.lpush(new_key, str(res))
+      
+    except Exception as e:
+        print(e)
+
+
+def save_categories(value):
+    '''Saves to redis the value entered in a specific key.'''
+        
+    # Create the Redis Connection object
+    try:    
+        # The decode_repsonses flag here directs the client to convert the 
+        # responses from Redis into Python strings using the default encoding 
+        # utf-8.  This is client specific.
+        r = redis.StrictRedis(host=redis_host, port=redis_port,\
+                              password=redis_password, decode_responses=True)
+       
+        for category in value:
+            r.lpush('categories',category)
+      
+    except Exception as e:
+        print(e)
+
+def save_sensors_parameters(mySensorsIds):
+    '''Saves to redis the value entered in a specific key.'''
+        
+    # Create the Redis Connection object
+    try:    
+        # The decode_repsonses flag here directs the client to convert the 
+        # responses from Redis into Python strings using the default encoding 
+        # utf-8.  This is client specific.
+        r = redis.StrictRedis(host=redis_host, port=redis_port,\
+                              password=redis_password, decode_responses=True)
+       
+        r.delete('sensors_parameters')
+        for title in mySensorsIds:
+            r.lpush('sensors_parameters', title)
+      
+    except Exception as e:
+        print(e)
+
+def save_measurement(key, value):
+    '''Saves to redis the value entered in a specific key.'''
+        
+    # Create the Redis Connection object
+    try:    
+        # The decode_repsonses flag here directs the client to convert the 
+        # responses from Redis into Python strings using the default encoding 
+        # utf-8.  This is client specific.
+        r = redis.StrictRedis(host=redis_host, port=redis_port,\
+                              password=redis_password, decode_responses=True)
+       
+        # Set the message in Redis 
+        r.lpush(key, str(value))
+      
+    except Exception as e:
+        print(e)
+
+
+[for (category: Category  | aSensorSystem.hasSubsystem.category->asOrderedSet())]
+	[if (category.toString().toUpper() = 'ACOUSTIC')]
+# Acoustic    
+
+def save_audio(key, name, timestamp):
+    '''Saves to redis the audio file in a specific key.'''
+    
+    
+    try:    
+        # The decode_repsonses flag here directs the client to convert the 
+        # responses from Redis into Python strings using the default encoding 
+        # utf-8.  This is client specific.
+        r = redis.StrictRedis(host=redis_host, port=redis_port,\
+                              password=redis_password, decode_responses=True)
+
+
+        r.lpush(key, str({"data": name, "timestamp": timestamp}))
+        
+    except Exception as e:
+        print(e)
+	[/if]
+[/for]
+
+[for (category: Category  | aSensorSystem.hasSubsystem.category->asOrderedSet())]
+	[if (category.toString().toUpper() = 'VISION')]
+# Vision   
+
+def save_image(key, name, timestamp):
+    '''Saves to redis the images in a specific key.'''
+    
+    try:    
+        # The decode_repsonses flag here directs the client to convert the 
+        # responses from Redis into Python strings using the default encoding 
+        # utf-8.  This is client specific.
+        r = redis.StrictRedis(host=redis_host, port=redis_port,\
+                              password=redis_password, decode_responses=True)
+
+        r.lpush(key, str({"data": name, "timestamp": timestamp}))
+        
+    except Exception as e:
+        print(e)
+    
+	[/if]
+[/for]
+[/file]
+[/template]

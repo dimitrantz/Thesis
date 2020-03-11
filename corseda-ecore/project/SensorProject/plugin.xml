@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <!-- @generated sensorProject -->
+      <package
+            uri="platform:/plugin/SensorProject/model/sensorProject.ecore"
+            class="sensorProject.SensorProjectPackage"
+            genModel="model/sensorProject.genmodel"/>
+   </extension>
+
+</plugin>

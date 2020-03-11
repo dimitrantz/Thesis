@@ -1,0 +1,88 @@
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module PostureSensorBase.
+ */]
+[module PostureSensorBase('platform:/plugin/SensorProject/model/sensorProject.ecore')]
+
+
+[**
+ * The documentation of the template postureSensorBase.
+ * @param aSensorSystem
+ */]
+[template public PostureSensorBase(aSensorSystem: SensorSystem) post(trim())]
+
+[file ('factory/postureSensor.py', false, 'UTF-8')]
+"""
+@author: Dimitra Ntzioni
+ python 2.7
+"""
+
+import time
+
+import saveToRedis as redisAPI
+from sensor import Sensor
+
+import R4ARobotRestApi as api # R4A Library
+from R4ARobotWsApi import RobotWsAPI as rws # R4A Library
+
+api.configuration.api_key['['/]'api_key'[']'/] = 'r4a_default_key'
+api.configuration.host = 'localhost:8080'
+
+
+#  Posture Sensors         
+class PostureSensor(Sensor):
+    '''Common base class for a Posture Sensor'''
+	
+    def __init__(self):
+        
+        Sensor.__init__(self)
+        
+        self.category = 'POSTURE'
+        self.controller = api.SensorsPositionApi()
+        self.name = 'Posture Sensor'
+        self.type = 'Robot'
+        self.measurements = list()
+       
+
+    def get_robot_posture(self):
+        '''Returns the current robot posture id. This must be one of the postures returned by
+           /robot/effectors/motion/move/postures. If the robot is not in one of the predefined 
+           postures, -1 is returned.'''            
+        
+        res = self.controller.getRobotPosture() 
+        
+        if (hasattr(res, 'data')):
+
+            self.measurements.append(res)
+            redisAPI.save_measurement(self.name,res)
+
+        elif (hasattr(res, 'error')):
+
+            self.measurements.append(res)
+            redisAPI.save_measurement(self.name,{'data': res['['/]'error'[']'/], 'timestamp':res['['/]'timestamp'[']'/]})
+        
+
+        else:
+            tempArray = list()
+            tempArray.append(['['/]"ERROR Posture Measurement",time.time()[']'/])
+            self.measurements.append(tempArray)
+
+
+    def start_measuring(self):
+        '''Gets a measurement of the position sensor every 1/max_hz seconds'''
+        
+        endtime = time.time() + self.duration
+       
+        # timer's argument in sec
+        while time.time() < endtime:
+            
+            start = time.time()
+            self.get_robot_posture()
+            time_elapsed = time.time() - start
+
+            if self.frequency > time_elapsed:
+                time.sleep(self.frequency - time_elapsed)
+        
+        
+[/file]
+[/template]

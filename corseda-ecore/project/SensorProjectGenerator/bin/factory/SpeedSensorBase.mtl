@@ -1,0 +1,84 @@
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module SpeedSensorBase.
+ */]
+[module SpeedSensorBase('platform:/plugin/SensorProject/model/sensorProject.ecore')]
+
+
+[**
+ * The documentation of the template generateElement.
+ * @param aSensorSystem
+ */]
+[template public SpeedSensorBase(aSensorSystem: SensorSystem) post(trim())]
+
+[file ('factory/speedSensor.py', false, 'UTF-8')]
+"""
+@author: Dimitra Ntzioni
+ python 2.7
+"""
+
+import time
+
+import saveToRedis as redisAPI
+from sensor import Sensor
+
+import R4ARobotRestApi as api # R4A Library
+from R4ARobotWsApi import RobotWsAPI as rws # R4A Library
+
+api.configuration.api_key['['/]'api_key'[']'/] = 'r4a_default_key'
+api.configuration.host = 'localhost:8080'
+
+
+# Speed Sensor
+
+class SpeedSensor(Sensor):
+
+    def __init__(self):
+
+        Sensor.__init__(self)
+
+        self.category = 'SPEED'
+        self.controller = api.SensorsSpeedApi()
+        self.name = 'speedSensor'
+        self.type = 'chassis'
+
+
+    def get_speed_measurement(self):
+        '''Function returning the last measurement of a sensor.'''
+		
+        res = self.controller.getSpeedSensorMeasurement()        
+
+        if (hasattr(res, 'twist')):
+
+            redisAPI.save_measurement(self.name,res)
+
+        elif (hasattr(res, 'error')):
+
+            redisAPI.save_measurement(self.name,{'data': res['['/]'error'[']'/], 'timestamp':res['['/]'timestamp'[']'/]})
+        
+       
+        else:
+            tempArray = list()
+            tempArray.append(['['/]"ERROR Speed Measurement",time.time()[']'/])
+            print tempArray
+
+    def start_measuring(self):
+        '''Gets a measurement of the speed sensor every 1/max_hz seconds'''
+        
+        endtime = time.time() + self.duration
+    
+        # timer's argument in sec
+        while time.time() < endtime:
+
+            start = time.time()
+            self.get_speed_measurement()
+            time_elapsed = time.time() - start
+
+            if self.frequency > time_elapsed:
+                time.sleep(self.frequency - time_elapsed)
+                 
+
+
+
+[/file]
+[/template]

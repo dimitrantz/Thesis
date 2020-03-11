@@ -1,0 +1,102 @@
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module SensorsUtilities.
+ */]
+[module SensorsUtilities('platform:/plugin/SensorProject/model/sensorProject.ecore')]
+
+[import factory::SensorSystemBase/]
+[import factory::SensorBase/]
+[import factory::DistanceSensorBase/]
+[import factory::ElectricSensorBase/]
+[import factory::SpeedSensorBase/]
+[import factory::PositionSensorBase/]
+[import factory::PressureSensorBase/]
+[import factory::VisionSensorBase/]
+[import factory::PostureSensorBase/]
+[import factory::TframeSensorBase/]
+[import factory::AcousticSystemBase/]
+
+
+[**
+ * The documentation of the template generateElement.
+ * @param aSensorSystem
+ */]
+[template public SensorsUtilities(aSensorSystem : SensorSystem)]
+
+
+[SensorBase()/]
+
+ [for (category: Category  | aSensorSystem.hasSubsystem.category->asOrderedSet())]
+	[if (category.toString().toUpper() = 'DISTANCE')]
+        [DistanceSensorBase(aSensorSystem)/]
+	[elseif (category.toString().toUpper() = 'ACOUSTIC')]
+		[AcousticSystemBase(aSensorSystem)/]
+	[elseif (category.toString().toUpper() = 'ELECTRIC')]
+		[ElectricSensorBase(aSensorSystem)/]
+	[elseif (category.toString().toUpper() = 'PRESSURE')]
+		[PressureSensorBase(aSensorSystem)/]
+	[elseif (category.toString().toUpper() = 'SPEED')]
+		[SpeedSensorBase(aSensorSystem)/]
+	[elseif (category.toString().toUpper() = 'VISION')]
+		[VisionSensorBase(aSensorSystem)/]
+	[elseif (category.toString().toUpper() = 'POSITION')]
+		[if (aSensorSystem.hasSubsystem->filter(sensorProject::PositionSystem).eContents()->filter(sensorProject::PostureSensor)->size() > 0)]
+			[PostureSensorBase(aSensorSystem)/]
+		[/if]
+		[if (aSensorSystem.hasSubsystem->filter(sensorProject::PositionSystem).eContents()->filter(sensorProject::PositionSensor)->size() > 0)]
+			[PositionSensorBase(aSensorSystem)/]		
+		[if (aSensorSystem.hasSubsystem->filter(sensorProject::PositionSystem).eContents()->filter(sensorProject::TframeSensor)->size() > 0)]
+			[TframeSensorBase(aSensorSystem)/]
+		[/if]
+		[/if]
+	[/if]
+
+ [/for]
+
+
+
+
+
+
+
+
+
+
+
+[SensorSystemBase(aSensorSystem)/]
+
+[file ('factory/sensors.py', false, 'UTF-8')]
+"""
+@author: Dimitra Ntzioni
+ python 2.7
+"""
+
+
+[for (category: Category  | aSensorSystem.hasSubsystem.category->asOrderedSet())]
+	[if (category.toString().toUpper() = 'DISTANCE')]
+from distanceSensor import DistanceSensor
+	[elseif (category.toString().toUpper() = 'ACOUSTIC')]
+from acousticSystem import AcousticSystem
+	[elseif (category.toString().toUpper() = 'ELECTRIC')]
+from electricSensor import ElectricSensor
+	[elseif (category.toString().toUpper() = 'PRESSURE')]
+from pressureSensor import PressureSensor
+	[elseif (category.toString().toUpper() = 'SPEED')]
+from speedSensor import SpeedSensor
+	[elseif (category.toString().toUpper() = 'VISION')]
+from visionSensor import VisionSensor
+	[elseif (category.toString().toUpper() = 'POSITION')]
+		[if (aSensorSystem.hasSubsystem->filter(sensorProject::PositionSystem).eContents()->filter(sensorProject::PostureSensor)->size() > 0)]
+from postureSensor import PostureSensor
+		[/if]
+		[if (aSensorSystem.hasSubsystem->filter(sensorProject::PositionSystem).eContents()->filter(sensorProject::PositionSensor)->size() > 0)]
+from positionSensor import PositionSensor
+		[/if]
+		[if (aSensorSystem.hasSubsystem->filter(sensorProject::PositionSystem).eContents()->filter(sensorProject::TframeSensor)->size() > 0)]
+from tframeSensor import TframeSensor
+		[/if]
+	[/if]
+ [/for]
+[/file]
+
+[/template]

@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:mtl="http://www.eclipse.org/acceleo/mtl/3.0" xmlns:ocl.ecore="http://www.eclipse.org/ocl/1.1.0/Ecore">
+  <mtl:Module name="AcousticSystemBase" nsURI="factory::AcousticSystemBase" startHeaderPosition="94" endHeaderPosition="268">
+    <documentation xsi:type="mtl:ModuleDocumentation">
+      <body startPosition="33" endPosition="91" value="&#xA;The documentation of the module AcousticSensorBase.&#xA;&#xA;"/>
+    </documentation>
+    <input>
+      <takesTypesFrom href="platform:/plugin/SensorProject/model/sensorProject.ecore#/"/>
+    </input>
+    <ownedModuleElement xsi:type="mtl:Template" name="AcousticSystemBase" visibility="Public">
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xA;"/>
+      <body xsi:type="mtl:FileBlock" openMode="OverWrite">
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&quot;&quot;&quot;&#xA;@author: Dimitra Ntzioni&#xA; python 2.7&#xA;&quot;&quot;&quot;&#xA;import time&#xA;&#xA;import wave, struct&#xA;import scipy.io.wavfile &#xA;&#xA;import saveToRedis as redisAPI&#xA;from sensor import Sensor &#xA;&#xA;import R4ARobotRestApi as api # R4A Library&#xA;from R4ARobotWsApi import RobotWsAPI as rws # R4A Library&#xA;&#xA;api.configuration.api_key"/>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="[">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="'api_key'"/>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="]">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" = 'r4a_default_key' &#xA;api.configuration.host = 'localhost:8080'&#xA;&#xA;class AcousticSystem(Sensor):&#xA;    '''Common base class for an Acoustic System'''&#xA;&#xA;    def __init__(self):&#xA;        &#xA;        Sensor.__init__(self)&#xA;&#xA;        self.category = 'ACOUSTIC'&#xA;        self.description = ' '&#xA;        self.controller =  api.SensorsAcousticApi()&#xA;        self.recordTime = 6.0&#xA;        self.myMicrophones = list()&#xA;&#xA;    def get_acoustic_sensor(self, name):&#xA;        '''Function returning a string containing the description of an&#xA;           acoustic sensor.'''&#xA;        &#xA;        res = self.controller.getAcousticSensor(name)&#xA;        redisAPI.save_sensor_info(name, res)&#xA;            &#xA;&#xA;        &#xA;    def record_file(self):&#xA;        '''Function recording a .wav file using specific microphones&#xA;           from the acoustic system created.'''&#xA;        &#xA;        res = self.controller.recordAudioFile(self.myMicrophones, self.recordTime)&#xA;        timestamp = time.time()&#xA;        name = 'audio' + str(timestamp) + '.wav'&#xA;&#xA;        &#xA;        &#xA;        waveFile = wave.open(res, 'rb')&#xA;        rate, data = scipy.io.wavfile.read(res)&#xA;        "/>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="[">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="nchannels, sampwidth, framerate, nframes, comptype, compname"/>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="]">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" = waveFile.getparams()    &#xA;&#xA;        wav_saved = wave.open('/home/user/Thesis/data-visualization/react-web-app/mythesis-app/public/audios/' + name, &quot;w&quot;)&#xA;        wav_saved.setparams((nchannels, sampwidth, framerate, nframes, comptype, compname))&#xA;        for sample in data:&#xA;                wav_saved.writeframes(struct.pack('h', int( sample)))&#xA;&#xA;        redisAPI.save_audio(self.description, name, timestamp)&#xA;        &#xA;    &#xA;    def start_measuring(self):&#xA;        '''Gets a measurement of the acoustic system every 1/freq seconds'''&#xA;"/>
+        <body xsi:type="mtl:IfBlock">
+          <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="        endtime = time.time() + self.duration&#xA;&#x9;&#x9;&#xA;        self.record_file()&#xA;&#xA;        while time.time() &lt; endtime:&#xA;&#xA;&#xA;           start = time.time()&#xA;           self.record_file()&#xA;           time_elapsed = time.time() - start&#xA;&#xA;           if self.frequency > time_elapsed:&#xA;               time.sleep(self.frequency - time_elapsed)&#xA;"/>
+          <ifExpr xsi:type="ocl.ecore:OperationCallExp">
+            <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+            <source xsi:type="ocl.ecore:OperationCallExp">
+              <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+              <source xsi:type="ocl.ecore:IteratorExp" name="select" eType="/14/Sequence(AcousticSystem)">
+                <source xsi:type="ocl.ecore:OperationCallExp" eType="/14/Sequence(AcousticSystem)" referredOperation="/1/oclstdlib_Collection(T)_Class/filter">
+                  <source xsi:type="ocl.ecore:OperationCallExp">
+                    <eType xsi:type="ocl.ecore:SequenceType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Sequence(T)"/>
+                    <source xsi:type="ocl.ecore:VariableExp" name="aSensorSubSystem" referredVariable="/0/AcousticSystemBase/aSensorSubSystem">
+                      <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+                    </source>
+                    <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/emf/2002/Ecore#//EObject/eContents"/>
+                  </source>
+                  <argument xsi:type="ocl.ecore:TypeExp" eType="/13/AcousticSystem">
+                    <referredType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//AcousticSystem"/>
+                  </argument>
+                </source>
+                <body xsi:type="ocl.ecore:OperationCallExp">
+                  <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+                  <source xsi:type="ocl.ecore:OperationCallExp">
+                    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                    <source xsi:type="ocl.ecore:OperationCallExp">
+                      <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                      <source xsi:type="ocl.ecore:PropertyCallExp">
+                        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+                        <source xsi:type="ocl.ecore:VariableExp" name="t" referredVariable="/0/AcousticSystemBase/%.1/%.9/%.1/%/select/t">
+                          <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//AcousticSystem"/>
+                        </source>
+                        <referredProperty xsi:type="ecore:EAttribute" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//AcousticSystem/measureOnce"/>
+                      </source>
+                      <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean_Class/toString"/>
+                    </source>
+                    <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String_Class/toUpper"/>
+                  </source>
+                  <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="FALSE">
+                    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                  </argument>
+                  <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String_Class/="/>
+                </body>
+                <iterator xsi:type="ocl.ecore:Variable" name="t">
+                  <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//AcousticSystem"/>
+                </iterator>
+              </source>
+              <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Sequence(T)_Class/size"/>
+            </source>
+            <argument xsi:type="ocl.ecore:IntegerLiteralExp" integerSymbol="0">
+              <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+            </argument>
+            <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer_Class/%3E"/>
+          </ifExpr>
+          <elseIf>
+            <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xA;        self.record_file()&#xA;"/>
+            <ifExpr xsi:type="ocl.ecore:OperationCallExp">
+              <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+              <source xsi:type="ocl.ecore:OperationCallExp">
+                <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+                <source xsi:type="ocl.ecore:IteratorExp" name="select" eType="/14/Sequence(AcousticSystem)">
+                  <source xsi:type="ocl.ecore:OperationCallExp" eType="/14/Sequence(AcousticSystem)" referredOperation="/1/oclstdlib_Collection(T)_Class/filter">
+                    <source xsi:type="ocl.ecore:OperationCallExp">
+                      <eType xsi:type="ocl.ecore:SequenceType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Sequence(T)"/>
+                      <source xsi:type="ocl.ecore:VariableExp" name="aSensorSubSystem" referredVariable="/0/AcousticSystemBase/aSensorSubSystem">
+                        <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+                      </source>
+                      <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/emf/2002/Ecore#//EObject/eContents"/>
+                    </source>
+                    <argument xsi:type="ocl.ecore:TypeExp" eType="/13/AcousticSystem">
+                      <referredType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//AcousticSystem"/>
+                    </argument>
+                  </source>
+                  <body xsi:type="ocl.ecore:OperationCallExp">
+                    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+                    <source xsi:type="ocl.ecore:OperationCallExp">
+                      <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                      <source xsi:type="ocl.ecore:OperationCallExp">
+                        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                        <source xsi:type="ocl.ecore:PropertyCallExp">
+                          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+                          <source xsi:type="ocl.ecore:VariableExp" name="t" referredVariable="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%/select/t">
+                            <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//AcousticSystem"/>
+                          </source>
+                          <referredProperty xsi:type="ecore:EAttribute" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//AcousticSystem/measureOnce"/>
+                        </source>
+                        <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean_Class/toString"/>
+                      </source>
+                      <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String_Class/toUpper"/>
+                    </source>
+                    <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="TRUE">
+                      <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                    </argument>
+                    <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String_Class/="/>
+                  </body>
+                  <iterator xsi:type="ocl.ecore:Variable" name="t">
+                    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//AcousticSystem"/>
+                  </iterator>
+                </source>
+                <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Sequence(T)_Class/size"/>
+              </source>
+              <argument xsi:type="ocl.ecore:IntegerLiteralExp" integerSymbol="0">
+                <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+              </argument>
+              <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer_Class/%3E"/>
+            </ifExpr>
+          </elseIf>
+        </body>
+        <fileUrl xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="factory/acousticSystem.py">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </fileUrl>
+        <charset xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="UTF-8">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </charset>
+      </body>
+      <documentation xsi:type="mtl:ModuleElementDocumentation">
+        <body startPosition="187" endPosition="268" value="&#xA;The documentation of the template generateElement.&#xA;@param aSensorSystem&#xA;&#xA;"/>
+        <parametersDocumentation name="aSensorSystem">
+          <body value=""/>
+        </parametersDocumentation>
+      </documentation>
+      <parameter name="aSensorSubSystem">
+        <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+      </parameter>
+      <post xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/trim">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <source xsi:type="ocl.ecore:VariableExp" name="self" referredVariable="/5">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </source>
+      </post>
+    </ownedModuleElement>
+  </mtl:Module>
+  <ecore:EPackage name="additions">
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_String_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+      </eAnnotations>
+      <eOperations name="trim">
+        <eAnnotations source="MTL non-standard"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+      </eOperations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Integer_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Real_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Real"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ecore_EObject_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+      </eAnnotations>
+      <eOperations name="AcousticSystemBase">
+        <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+          <contents xsi:type="ocl.ecore:Constraint"/>
+        </eAnnotations>
+        <eAnnotations source="MTL" references="/0/AcousticSystemBase"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <eParameters name="aSensorSubSystem">
+          <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+        </eParameters>
+      </eOperations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_OclAny_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Collection(T)_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Collection(T)"/>
+      </eAnnotations>
+      <eOperations name="filter">
+        <eAnnotations source="MTL non-standard"/>
+        <eType xsi:type="ocl.ecore:CollectionType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Collection(T)"/>
+        <eParameters name="filter">
+          <eType xsi:type="ocl.ecore:TypeType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclType"/>
+        </eParameters>
+      </eOperations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Sequence(T)_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Sequence(T)"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_OrderedSet(T)_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OrderedSet(T)"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="sensorProject_SensorSystem_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+      </eAnnotations>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ecore:EPackage name="types">
+    <eClassifiers xsi:type="ocl.ecore:TypeType" name="AcousticSystem">
+      <referredType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//AcousticSystem"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ecore:EPackage name="collections">
+    <eClassifiers xsi:type="ocl.ecore:SequenceType" name="Sequence(AcousticSystem)" instanceClassName="java.util.List">
+      <elementType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//AcousticSystem"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ecore:EAnnotation source="positions">
+    <eAnnotations source="positions.0" references="/0/%">
+      <details key="start" value="30"/>
+      <details key="end" value="93"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.1" references="/0/AcousticSystemBase">
+      <details key="start" value="271"/>
+      <details key="end" value="3098"/>
+      <details key="line" value="13"/>
+    </eAnnotations>
+    <eAnnotations source="positions.2" references="/0/AcousticSystemBase/%">
+      <details key="start" value="353"/>
+      <details key="end" value="354"/>
+      <details key="line" value="14"/>
+    </eAnnotations>
+    <eAnnotations source="positions.3" references="/0/AcousticSystemBase/%.1">
+      <details key="start" value="354"/>
+      <details key="end" value="3086"/>
+      <details key="line" value="15"/>
+    </eAnnotations>
+    <eAnnotations source="positions.4" references="/0/AcousticSystemBase/%.1/%">
+      <details key="start" value="407"/>
+      <details key="end" value="698"/>
+      <details key="line" value="16"/>
+    </eAnnotations>
+    <eAnnotations source="positions.5" references="/0/AcousticSystemBase/%.1/%.1">
+      <details key="start" value="699"/>
+      <details key="end" value="702"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.6" references="/0/AcousticSystemBase/%.1/%.2">
+      <details key="start" value="704"/>
+      <details key="end" value="713"/>
+      <details key="line" value="31"/>
+    </eAnnotations>
+    <eAnnotations source="positions.7" references="/0/AcousticSystemBase/%.1/%.3">
+      <details key="start" value="714"/>
+      <details key="end" value="717"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.8" references="/0/AcousticSystemBase/%.1/%.4">
+      <details key="start" value="719"/>
+      <details key="end" value="1822"/>
+      <details key="line" value="31"/>
+    </eAnnotations>
+    <eAnnotations source="positions.9" references="/0/AcousticSystemBase/%.1/%.5">
+      <details key="start" value="1823"/>
+      <details key="end" value="1826"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.10" references="/0/AcousticSystemBase/%.1/%.6">
+      <details key="start" value="1828"/>
+      <details key="end" value="1888"/>
+      <details key="line" value="68"/>
+    </eAnnotations>
+    <eAnnotations source="positions.11" references="/0/AcousticSystemBase/%.1/%.7">
+      <details key="start" value="1889"/>
+      <details key="end" value="1892"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.12" references="/0/AcousticSystemBase/%.1/%.8">
+      <details key="start" value="1894"/>
+      <details key="end" value="2423"/>
+      <details key="line" value="68"/>
+    </eAnnotations>
+    <eAnnotations source="positions.13" references="/0/AcousticSystemBase/%.1/%.9">
+      <details key="start" value="2423"/>
+      <details key="end" value="3078"/>
+      <details key="line" value="80"/>
+    </eAnnotations>
+    <eAnnotations source="positions.14" references="/0/AcousticSystemBase/%.1/%.9/%">
+      <details key="start" value="2571"/>
+      <details key="end" value="2897"/>
+      <details key="line" value="80"/>
+    </eAnnotations>
+    <eAnnotations source="positions.15" references="/0/AcousticSystemBase/%.1/%.9/%.1">
+      <details key="start" value="2427"/>
+      <details key="end" value="2566"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.16" references="/0/AcousticSystemBase/%.1/%.9/%.1/%">
+      <details key="start" value="2428"/>
+      <details key="end" value="2561"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.17" references="/0/AcousticSystemBase/%.1/%.9/%.1/%/select">
+      <details key="start" value="2428"/>
+      <details key="end" value="2553"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.18" references="/0/AcousticSystemBase/%.1/%.9/%.1/%/select/%">
+      <details key="start" value="2428"/>
+      <details key="end" value="2495"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.19" references="/0/AcousticSystemBase/%.1/%.9/%.1/%/select/%/%">
+      <details key="start" value="2428"/>
+      <details key="end" value="2456"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.20" references="/0/AcousticSystemBase/%.1/%.9/%.1/%/select/%/%/aSensorSubSystem">
+      <details key="start" value="2428"/>
+      <details key="end" value="2444"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.21" references="/0/AcousticSystemBase/%.1/%.9/%.1/%/select/%/%.1">
+      <details key="start" value="2465"/>
+      <details key="end" value="2494"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.22" references="/0/AcousticSystemBase/%.1/%.9/%.1/%/select/%.1">
+      <details key="start" value="2508"/>
+      <details key="end" value="2552"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.23" references="/0/AcousticSystemBase/%.1/%.9/%.1/%/select/%.1/%">
+      <details key="start" value="2508"/>
+      <details key="end" value="2542"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.24" references="/0/AcousticSystemBase/%.1/%.9/%.1/%/select/%.1/%/%">
+      <details key="start" value="2508"/>
+      <details key="end" value="2532"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.25" references="/0/AcousticSystemBase/%.1/%.9/%.1/%/select/%.1/%/%/%">
+      <details key="start" value="2508"/>
+      <details key="end" value="2521"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.26" references="/0/AcousticSystemBase/%.1/%.9/%.1/%/select/%.1/%/%/%/t">
+      <details key="start" value="2508"/>
+      <details key="end" value="2509"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.27" references="/0/AcousticSystemBase/%.1/%.9/%.1/%/select/%.1/%.1">
+      <details key="start" value="2545"/>
+      <details key="end" value="2552"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.28" references="/0/AcousticSystemBase/%.1/%.9/%.1/%/select/t">
+      <details key="start" value="2504"/>
+      <details key="end" value="2505"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.29" references="/0/AcousticSystemBase/%.1/%.9/%.1/%.1">
+      <details key="start" value="2564"/>
+      <details key="end" value="2565"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.30" references="/0/AcousticSystemBase/%.1/%.9/%.2">
+      <details key="start" value="2897"/>
+      <details key="end" value="3073"/>
+      <details key="line" value="94"/>
+    </eAnnotations>
+    <eAnnotations source="positions.31" references="/0/AcousticSystemBase/%.1/%.9/%.2/%">
+      <details key="start" value="3045"/>
+      <details key="end" value="3073"/>
+      <details key="line" value="95"/>
+    </eAnnotations>
+    <eAnnotations source="positions.32" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1">
+      <details key="start" value="2905"/>
+      <details key="end" value="3043"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.33" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%">
+      <details key="start" value="2906"/>
+      <details key="end" value="3038"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.34" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%/select">
+      <details key="start" value="2906"/>
+      <details key="end" value="3030"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.35" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%/select/%">
+      <details key="start" value="2906"/>
+      <details key="end" value="2973"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.36" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%/select/%/%">
+      <details key="start" value="2906"/>
+      <details key="end" value="2934"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.37" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%/select/%/%/aSensorSubSystem">
+      <details key="start" value="2906"/>
+      <details key="end" value="2922"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.38" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%/select/%/%.1">
+      <details key="start" value="2943"/>
+      <details key="end" value="2972"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.39" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%/select/%.1">
+      <details key="start" value="2986"/>
+      <details key="end" value="3029"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.40" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%/select/%.1/%">
+      <details key="start" value="2986"/>
+      <details key="end" value="3020"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.41" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%/select/%.1/%/%">
+      <details key="start" value="2986"/>
+      <details key="end" value="3010"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.42" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%/select/%.1/%/%/%">
+      <details key="start" value="2986"/>
+      <details key="end" value="2999"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.43" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%/select/%.1/%/%/%/t">
+      <details key="start" value="2986"/>
+      <details key="end" value="2987"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.44" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%/select/%.1/%.1">
+      <details key="start" value="3023"/>
+      <details key="end" value="3029"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.45" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%/select/t">
+      <details key="start" value="2982"/>
+      <details key="end" value="2983"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.46" references="/0/AcousticSystemBase/%.1/%.9/%.2/%.1/%.1">
+      <details key="start" value="3041"/>
+      <details key="end" value="3042"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.47" references="/0/AcousticSystemBase/%.1/%.10">
+      <details key="start" value="361"/>
+      <details key="end" value="388"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.48" references="/0/AcousticSystemBase/%.1/%.11">
+      <details key="start" value="397"/>
+      <details key="end" value="404"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.49" references="/0/AcousticSystemBase/%.2">
+      <details key="start" value="184"/>
+      <details key="end" value="270"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.50" references="/0/AcousticSystemBase/%.2/aSensorSystem">
+      <details key="start" value="-1"/>
+      <details key="end" value="-1"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.51" references="/0/AcousticSystemBase/aSensorSubSystem">
+      <details key="start" value="307"/>
+      <details key="end" value="337"/>
+      <details key="line" value="13"/>
+    </eAnnotations>
+    <eAnnotations source="positions.52" references="/0/AcousticSystemBase/%.3">
+      <details key="start" value="344"/>
+      <details key="end" value="350"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.53" references="/0/AcousticSystemBase/%.3/self">
+      <details key="start" value="-1"/>
+      <details key="end" value="-1"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+  </ecore:EAnnotation>
+</xmi:XMI>

@@ -1,0 +1,577 @@
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module SensorSystemBase.
+ */]
+[module SensorSystemBase('platform:/plugin/SensorProject/model/sensorProject.ecore')]
+
+
+[**
+ * The documentation of the template generateElement.
+ * @param aSensorSystem
+ */]
+[template public SensorSystemBase(aSensorSystem: SensorSystem) post(trim())]
+
+[file ('factory/sensorSystem.py', false, 'UTF-8')]
+"""
+@author: Dimitra Ntzioni
+ -*- coding: utf-8 -*-
+"""
+import threading
+import sensors 
+import saveToRedis as redisAPI
+
+import R4ARobotRestApi as api # R4A Library
+
+from R4ARobotWsApi import RobotWsAPI as rws # R4A Library
+from R4ARobotWsApi import init_loop # R4A Library
+    
+class SensorSystem: 
+    '''Master class of the system. Common class for a sensor system. '''
+    
+    def __init__(self):
+        
+        self.controller = api.RobotApi()
+        self.name = '[aSensorSystem.name/]'
+        tempTime = [aSensorSystem.duration/]
+                [if (aSensorSystem.timeFormat.toString() = 'SECONDS')]
+        self.duration = tempTime
+				[elseif (aSensorSystem.timeFormat.toString() = 'MINUTES')]
+        self.duration = tempTime * 60
+				[elseif (aSensorSystem.timeFormat.toString() = 'HOURS')]
+        self.duration = tempTime * 3600
+				[/if]     
+        self.mySensors = list() 
+        self.myCategories = list()
+        self.mySensorsIds = list() # Data needed for Web Application
+
+            
+    def setSystem(self):  
+ 
+        res = self.controller.getRobotInformation()
+        redisAPI.save_sensor_info('Robot', res)
+
+[for (subsystem: SubSystem |  aSensorSystem.hasSubsystem)]
+	
+	[if (subsystem.oclIsTypeOf(DistanceSystem))]
+        #Creating Distance Sensors
+		[for (sensor: Sensor  | subsystem.hasSensor)]
+			[if (sensor.oclIsTypeOf(DistanceSensor))]
+				
+			
+        temp = sensors.DistanceSensor()
+	
+        temp.category = '[subsystem.category.toString().toUpper() /]'
+        temp.frequency = [subsystem.refresh_rate /]
+        temp.duration = self.duration
+        temp.type = '[sensor.oclAsType(DistanceSensor).type.toString().toLower() /]'
+        temp.name = '[sensor.oclAsType(DistanceSensor).name /]'               
+        temp.maxDistance = [sensor.oclAsType(DistanceSensor).maxDistanceAccepted /]
+        temp.minDistance = [sensor.oclAsType(DistanceSensor).minDistanceAccepted /]                                            
+           		[if (sensor.oclAsType(DistanceSensor).notifications = true)]
+        temp.alarmValue = [sensor.oclAsType(DistanceSensor).alarmValue /]
+				[else]
+        temp.alarmValue = 'None'  
+				[/if]        
+        self.mySensors.append(temp)
+        self.myCategories.append('[subsystem.category.toString().toUpper() /]')
+
+        # Data needed for API
+        redisAPI.delete_from_redis(temp.name)
+        self.mySensorsIds.append(str({  'category': temp.category, 'sensor': temp.name, 'index': temp.type, 
+                                        'frequency': temp.frequency, 'maxDistanceAccepted': temp.maxDistance, 
+                                        'minDistanceAccepted': temp.minDistance, 'alarmValue': temp.alarmValue}))
+
+        temp.get_distance_sensor()
+            [/if]
+		[/for]
+
+	[elseif subsystem.oclIsTypeOf(ElectricSystem)]
+        #Creating Electric Sensors
+		[for (sensor: Sensor  | subsystem.hasSensor)]
+			[if (sensor.oclIsTypeOf(ElectricSensor))]
+
+        temp = sensors.ElectricSensor()
+                    
+        temp.category = '[subsystem.category.toString().toUpper() /]'
+        temp.frequency = [subsystem.refresh_rate /]
+        temp.duration = self.duration
+        temp.type = '[sensor.oclAsType(ElectricSensor).type.toString().toLower() /]'
+        temp.name = '[sensor.oclAsType(ElectricSensor).name /]'
+           		[if (sensor.oclAsType(ElectricSensor).notifications = true)]
+        temp.alarmValue = [sensor.oclAsType(ElectricSensor).alarmValue /]
+				[else]
+        temp.alarmValue = 'None'  
+				[/if]              
+                
+        self.mySensors.append(temp)
+        self.myCategories.append('[subsystem.category.toString().toUpper() /]')
+
+        # Data needed for API
+        redisAPI.delete_from_redis(temp.name)
+        self.mySensorsIds.append(str({  'category': temp.category, 'sensor': temp.name, 'index': temp.type, 'frequency': temp.frequency,
+                                        'alarmValue': temp.alarmValue }))
+
+        temp.get_electric_sensor()
+			[/if]
+		[/for]
+	[elseif subsystem.oclIsTypeOf(PressureSystem)]
+        #Creating Pressure Sensors
+		[for (sensor: Sensor  | subsystem.hasSensor)]
+			[if (sensor.oclIsTypeOf(PressureSensorHead))]
+		
+        temp = sensors.PressureSensor()
+
+        temp.category = '[subsystem.category.toString().toUpper() /]'   
+        temp.duration = self.duration
+        temp.frequency = [subsystem.refresh_rate /]
+			[if (sensor.oclAsType(PressureSensorHead).type.toString() = 'HEAD_TOUCH_REAR')]
+        temp.type = 'Head_Touch_Rear'
+			[elseif (sensor.oclAsType(PressureSensorHead).type.toString() = 'HEAD_TOUCH_FRONT')]
+        temp.type = 'Head_Touch_Front'
+			[elseif (sensor.oclAsType(PressureSensorHead).type.toString() = 'HEAD_TOUCH_MIDDLE')]
+        temp.type = 'Head_Touch_Middle'
+			[/if]
+        temp.name = '[sensor.oclAsType(PressureSensorHead).name /]'   
+                   
+        self.mySensors.append(temp)
+        self.myCategories.append('[subsystem.category.toString().toUpper() /]')
+
+        # Data needed for API
+        redisAPI.delete_from_redis(temp.name)
+        self.mySensorsIds.append(str({  'category': temp.category, 'sensor': temp.name, 'index': temp.type, 'frequency': temp.frequency}))
+
+        temp.get_pressure_sensor()
+			[elseif (sensor.oclIsTypeOf(PressureSensorHand))]
+
+        temp = sensors.PressureSensor()
+
+        temp.category = '[subsystem.category.toString().toUpper() /]'   
+        temp.duration = self.duration
+        temp.frequency = [subsystem.refresh_rate /]
+			[if (sensor.oclAsType(PressureSensorHand).type.toString() = 'RHAND_TOUCH_BACK')]
+        temp.type = 'RHand_Touch_Back'
+			[elseif (sensor.oclAsType(PressureSensorHand).type.toString() = 'RHAND_TOUCH_LEFT')]
+        temp.type = 'RHand_Touch_Left'
+			[elseif (sensor.oclAsType(PressureSensorHand).type.toString() = 'RHAND_TOUCH_RIGHT')]
+        temp.type = 'RHand_Touch_Right'
+			[elseif (sensor.oclAsType(PressureSensorHand).type.toString() = 'LHAND_TOUCH_BACK')]
+        temp.type = 'LHand_Touch_Back'
+			[elseif (sensor.oclAsType(PressureSensorHand).type.toString() = 'LHAND_TOUCH_LEFT')]
+        temp.type = 'LHand_Touch_Left'
+			[elseif (sensor.oclAsType(PressureSensorHand).type.toString() = 'LHAND_TOUCH_RIGHT')]
+        temp.type = 'LHand_Touch_Right'
+			[/if]
+        temp.name = '[sensor.oclAsType(PressureSensorHand).name /]'  
+                   
+        self.mySensors.append(temp)
+        self.myCategories.append('[subsystem.category.toString().toUpper() /]')
+
+        # Data needed for API
+        redisAPI.delete_from_redis(temp.name)
+        self.mySensorsIds.append(str({  'category': temp.category, 'sensor': temp.name, 'index': temp.type, 'frequency': temp.frequency}))
+
+        temp.get_pressure_sensor()
+			[elseif (sensor.oclIsTypeOf(PressureSensorFoot))]
+
+        temp = sensors.PressureSensor()
+
+        temp.category = '[subsystem.category.toString().toUpper() /]'   
+        temp.duration = self.duration
+        temp.frequency = [subsystem.refresh_rate /]
+			[if (sensor.oclAsType(PressureSensorFoot).type.toString() = 'RFOOT_BUMPER_LEFT')]
+        temp.type = 'RFoot_Bumper_Left'
+			[elseif (sensor.oclAsType(PressureSensorFoot).type.toString() = 'RFOOT_BUMPER_RIGHT')]
+        temp.type = 'RFoot_Bumper_Right'
+			[elseif (sensor.oclAsType(PressureSensorFoot).type.toString() = 'LFOOT_BUMPER_LEFT')]
+        temp.type = 'LFoot_Bumper_Left'
+			[elseif (sensor.oclAsType(PressureSensorFoot).type.toString() = 'LFOOT_BUMPER_RIGHT')]
+        temp.type = 'LFoot_Bumper_Right'
+			[/if]
+        temp.name = '[sensor.oclAsType(PressureSensorFoot).name /]'  
+                   
+        self.mySensors.append(temp)
+        self.myCategories.append('[subsystem.category.toString().toUpper() /]')
+
+        # Data needed for API
+        redisAPI.delete_from_redis(temp.name)
+        self.mySensorsIds.append(str({  'category': temp.category, 'sensor': temp.name, 'index': temp.type, 'frequency': temp.frequency}))
+
+        temp.get_pressure_sensor()
+			[/if]
+ 
+		[/for]
+		
+	[elseif subsystem.oclIsTypeOf(SpeedSystem)]
+        #Creating Speed Sensors
+		[for (sensor: Sensor  | subsystem.hasSensor)]
+			[if (sensor.oclIsTypeOf(SpeedSensor))]
+		
+        temp = sensors.SpeedSensor()
+
+        temp.category = '[subsystem.category.toString().toUpper() /]'   
+        temp.duration = self.duration
+        temp.frequency = [subsystem.refresh_rate /]
+        temp.type = '[sensor.oclAsType(SpeedSensor).type.toString().toLower().toUpperFirst() /]'
+        temp.name = '[sensor.oclAsType(SpeedSensor).name /]'      
+                   
+        self.mySensors.append(temp)
+        self.myCategories.append('[subsystem.category.toString().toUpper() /]')
+
+        # Data needed for API
+        redisAPI.delete_from_redis(temp.name)
+        self.mySensorsIds.append(str({  'category': temp.category, 'sensor': temp.name, 'index': temp.type, 'frequency': temp.frequency}))
+
+			[/if]
+		[/for]
+	[elseif subsystem.oclIsTypeOf(PositionSystem)]
+        #Creating Position Sensors
+		[for (sensor: Sensor  | subsystem.hasSensor)]
+			[if (sensor.oclIsTypeOf(PositionSensorHead))]
+
+        temp = sensors.PositionSensor()
+
+        temp.category = '[subsystem.category.toString().toUpper() /]'  
+        temp.duration = self.duration
+        temp.frequency = [subsystem.refresh_rate /]
+			[if (sensor.oclAsType(PositionSensorHead).type.toString() = 'HEADYAW')]
+        temp.type = 'HeadYaw'
+			[elseif (sensor.oclAsType(PositionSensorHead).type.toString() = 'HEADPITCH')]
+        temp.type = 'HeadPitch'
+			[/if]
+        temp.name = '[sensor.oclAsType(PositionSensorHead).name /]'  
+                   
+        self.mySensors.append(temp)
+        self.myCategories.append('[subsystem.category.toString().toUpper() /]')
+
+        # Data needed for API
+        redisAPI.delete_from_redis(temp.name)
+        self.mySensorsIds.append(str({  'category': temp.category, 'sensor': temp.name, 'index': temp.type, 'frequency': temp.frequency}))
+
+        temp.get_position_sensor()
+			[elseif (sensor.oclIsTypeOf(PositionSensorHand))]
+
+        temp = sensors.PositionSensor()
+
+        temp.category = '[subsystem.category.toString().toUpper() /]'  
+        temp.duration = self.duration
+        temp.frequency = [subsystem.refresh_rate /]
+			[if (sensor.oclAsType(PositionSensorHand).type.toString() = 'LWRISTYAW')]
+        temp.type = 'LWristYaw'
+			[elseif (sensor.oclAsType(PositionSensorHand).type.toString() = 'LSHOULDERPITCH')]
+        temp.type = 'LShoulderPitch'
+			[elseif (sensor.oclAsType(PositionSensorHand).type.toString() = 'LSHOULDERROLL')]
+        temp.type = 'LShoulderRoll'
+			[elseif (sensor.oclAsType(PositionSensorHand).type.toString() = 'LELBOWYAW')]
+        temp.type = 'LElbowYaw'
+			[elseif (sensor.oclAsType(PositionSensorHand).type.toString() = 'LELBOWROLL')]
+        temp.type = 'LElbowRoll'
+			[elseif (sensor.oclAsType(PositionSensorHand).type.toString() = 'RWRISTYAW')]
+        temp.type = 'RWristYaw'
+			[elseif (sensor.oclAsType(PositionSensorHand).type.toString() = 'RSHOULDERPITCH')]
+        temp.type = 'RShoulderPitch'
+			[elseif (sensor.oclAsType(PositionSensorHand).type.toString() = 'RSHOULDERROLL')]
+        temp.type = 'RShoulderRoll'
+			[elseif (sensor.oclAsType(PositionSensorHand).type.toString() = 'RELBOWYAW')]
+        temp.type = 'RElbowYaw'
+			[elseif (sensor.oclAsType(PositionSensorHand).type.toString() = 'RELBOWROLL')]
+        temp.type = 'RElbowRoll'
+			[/if]
+        temp.name = '[sensor.oclAsType(PositionSensorHand).name /]'  
+                   
+        self.mySensors.append(temp)
+        self.myCategories.append('[subsystem.category.toString().toUpper() /]')
+
+        # Data needed for API
+        redisAPI.delete_from_redis(temp.name)
+        self.mySensorsIds.append(str({  'category': temp.category, 'sensor': temp.name, 'index': temp.type, 'frequency': temp.frequency}))
+
+        temp.get_position_sensor()
+            [elseif (sensor.oclIsTypeOf(PositionSensorFoot))]
+
+        temp = sensors.PositionSensor()
+
+        temp.category = '[subsystem.category.toString().toUpper() /]'  
+        temp.duration = self.duration
+        temp.frequency = [subsystem.refresh_rate /]
+			[if (sensor.oclAsType(PositionSensorFoot).type.toString() = 'LHIPYAWPITCH')]
+        temp.type = 'LHipYawPitch'
+			[elseif (sensor.oclAsType(PositionSensorFoot).type.toString() = 'LHIPROLL')]
+        temp.type = 'LHipRoll'
+			[elseif (sensor.oclAsType(PositionSensorFoot).type.toString() = 'LHIPPITCH')]
+        temp.type = 'LHipPitch'
+			[elseif (sensor.oclAsType(PositionSensorFoot).type.toString() = 'LKNEEPITCH')]
+        temp.type = 'LKneePitch'
+			[elseif (sensor.oclAsType(PositionSensorFoot).type.toString() = 'LANKLEPITCH')]
+        temp.type = 'LAnklePitch'
+			[elseif (sensor.oclAsType(PositionSensorFoot).type.toString() = 'LANKLEROLL')]
+        temp.type = 'LAnkleRoll'
+			[elseif (sensor.oclAsType(PositionSensorFoot).type.toString() = 'RHIPYAWPITCH')]
+        temp.type = 'RHipYawPitch'
+			[elseif (sensor.oclAsType(PositionSensorFoot).type.toString() = 'RHIPROLL')]
+        temp.type = 'RHipRoll'
+			[elseif (sensor.oclAsType(PositionSensorFoot).type.toString() = 'RHIPPITCH')]
+        temp.type = 'RHipPitch'
+			[elseif (sensor.oclAsType(PositionSensorFoot).type.toString() = 'RKNEEPITCH')]
+        temp.type = 'RKneePitch'
+			[elseif (sensor.oclAsType(PositionSensorFoot).type.toString() = 'RANKLEPITCH')]
+        temp.type = 'RAnklePitch'
+			[elseif (sensor.oclAsType(PositionSensorFoot).type.toString() = 'RANKLEROLL')]
+        temp.type = 'RAnkleRoll'
+			[/if]
+        temp.name = '[sensor.oclAsType(PositionSensorFoot).name /]'  
+                   
+        self.mySensors.append(temp)
+        self.myCategories.append('[subsystem.category.toString().toUpper() /]')
+
+        # Data needed for API
+        redisAPI.delete_from_redis(temp.name)
+        self.mySensorsIds.append(str({  'category': temp.category, 'sensor': temp.name, 'index': temp.type, 'frequency': temp.frequency}))
+
+        temp.get_position_sensor()
+			[elseif (sensor.oclIsTypeOf(PositionSensorRobot))]
+
+        temp = sensors.PositionSensor()
+
+        temp.category = '[subsystem.category.toString().toUpper() /]'  
+        temp.duration = self.duration
+        temp.frequency = [subsystem.refresh_rate /]
+        temp.type = '[sensor.oclAsType(PositionSensorRobot).type.toString().toLower().toUpperFirst() /]'
+        temp.name = '[sensor.oclAsType(PositionSensorRobot).name /]'  
+                   
+        self.mySensors.append(temp)
+        self.myCategories.append('[subsystem.category.toString().toUpper() /]')
+
+        # Data needed for API
+        redisAPI.delete_from_redis(temp.name)
+        self.mySensorsIds.append(str({  'category': temp.category, 'sensor': temp.name, 'index': temp.type, 'frequency': temp.frequency}))
+
+        temp.get_position_sensor()
+
+			[elseif (sensor.oclIsTypeOf(PostureSensor))]
+
+        temp = sensors.PostureSensor()
+
+        temp.category = 'POSTURE'  
+        temp.duration = self.duration
+        temp.frequency = [subsystem.refresh_rate /]
+        temp.type = '[sensor.oclAsType(PostureSensor).type.toString().toLower().toUpperFirst() /]'
+        temp.name = '[sensor.oclAsType(PostureSensor).name /]'  
+
+        self.mySensors.append(temp)
+        self.myCategories.append(temp.category)
+
+        # Data needed for API
+        redisAPI.delete_from_redis(temp.name)
+        self.mySensorsIds.append(str({  'category': temp.category, 'sensor': temp.name, 'index': temp.type, 'frequency': temp.frequency }))
+
+			[elseif (sensor.oclIsTypeOf(TframeSensor))]
+
+        temp = sensors.TframeSensor()
+
+        temp.category = '[subsystem.category.toString().toUpper() /]'  
+        temp.duration = self.duration
+        temp.frequency = [subsystem.refresh_rate /]
+			[if (sensor.oclAsType(TframeSensor).origin.toString() = 'LHIPYAWPITCH')]
+        temp.originId = 'LHipYawPitch' 
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LHIPROLL')]
+        temp.originId = 'LHipRoll'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LHIPPITCH')]
+        temp.originId = 'LHipPitch'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LKNEEPITCH')]
+        temp.originId = 'LKneePitch'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LANKLEPITCH')]
+        temp.originId = 'LAnklePitch'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LANKLEROLL')]
+        temp.originId = 'LAnkleRoll'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RHIPYAWPITCH')]
+        temp.originId = 'RHipYawPitch'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RHIPROLL')]
+        temp.originId = 'RHipRoll'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RHIPPITCH')]
+        temp.originId = 'RHipPitch'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RKNEEPITCH')]
+        temp.originId = 'RKneePitch'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RANKLEPITCH')]
+        temp.originId = 'RAnklePitch'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RANKLEROLL')]
+        temp.originId = 'RAnkleRoll'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LWRISTYAW')]
+        temp.originId = 'LWristYaw'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LSHOULDERPITCH')]
+        temp.originId = 'LShoulderPitch'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LSHOULDERROLL')]
+        temp.originId = 'LShoulderRoll'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LELBOWYAW')]
+        temp.originId = 'LElbowYaw'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LELBOWROLL')]
+        temp.originId = 'LElbowRoll'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RWRISTYAW')]
+        temp.originId = 'RWristYaw'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RSHOULDERPITCH')]
+        temp.originId = 'RShoulderPitch'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RSHOULDERROLL')]
+        temp.originId = 'RShoulderRoll'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RELBOWYAW')]
+        temp.originId = 'RElbowYaw'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RELBOWROLL')]
+        temp.originId = 'RElbowRoll'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'ACCELEROMETER')]
+        temp.originId = 'Accelerometer'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'BATTERY')]
+        temp.originId = 'Battery'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'CAMERATOP')]
+        temp.originId = 'CameraTop'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'CAMERABOTTOM')]
+        temp.originId = 'CameraBottom'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'HEAD_TOUCH_FRONT')]
+        temp.originId = 'Head/Touch/Front'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'HEAD_TOUCH_MIDDLE')]
+        temp.originId = 'Head/Touch/Middle'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'HEAD_TOUCH_REAR')]
+        temp.originId = 'Head/Touch/Rear'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LFOOT_BUMBER_LEFT')]
+        temp.originId = 'LFoot/Bumper/Left'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LFOOT_BUMBER_RIGHT')]
+        temp.originId = 'LFoot/Bumper/Right'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'MICFRONT')]
+        temp.originId = 'MicFront'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'MICLEFT')]
+        temp.originId = 'MicLeft'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'MICREAR')]
+        temp.originId = 'MicRear'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'MICRIGHT')]
+        temp.originId = 'MicRight'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'HEADPITCH')]
+        temp.originId = 'HeadPitch'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'HEADYAW')]
+        temp.originId = 'HeadYaw'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'SONAR_RIGHT')]
+        temp.originId = 'Sonar/Right'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'SONAR_LEFT')]
+        temp.originId = 'Sonar/Left'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RHAND_TOUCH_RIGHT')]
+        temp.originId = 'RHand/Touch/Right'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RHAND_TOUCH_LEFT')]
+        temp.originId = 'RHand/Touch/Left'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RHAND_TOUCH_BACK')]
+        temp.originId = 'RHand/Touch/Back'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LHAND_TOUCH_RIGHT')]
+        temp.originId = 'LHand/Touch/Right'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LHAND_TOUCH_LEFT')]
+        temp.originId = 'LHand/Touch/Left'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'LHAND_TOUCH_BACK')]
+        temp.originId = 'LHand/Touch/Back'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RFOOT_BUMBER_RIGHT')]
+        temp.originId = 'RFoot/Bumper/Right'
+			[elseif (sensor.oclAsType(TframeSensor).origin.toString() = 'RFOOT_BUMBER_LEFT')]
+        temp.originId = 'RFoot/Bumper/Left'
+				[/if]
+        temp.targetId = '[sensor.oclAsType(TframeSensor).target.toString().toUpper() /]'
+        temp.name = '[sensor.oclAsType(TframeSensor).name /]'  
+                   
+        self.mySensors.append(temp)
+        self.myCategories.append('[subsystem.category.toString().toUpper() /]')
+        index = str(temp.originId) + ' | ' + str(temp.targetId)
+
+        # Data needed for API
+        redisAPI.delete_from_redis(temp.name)
+        self.mySensorsIds.append(str({  'category': temp.category, 'sensor': temp.name, 'index': index, 'frequency': temp.frequency,
+                                        'origin': temp.originId, 'target': temp.targetId }))
+
+			[/if]
+		[/for]
+	[elseif subsystem.oclIsTypeOf(VisionSystem)]
+        #Creating Vision Sensors
+		[for (sensor: Sensor  | subsystem.hasSensor)]
+			[if (sensor.oclIsTypeOf(VisionSensor))]
+		
+    	temp = sensors.VisionSensor()
+
+        temp.category = '[subsystem.category.toString().toUpper() /]'   
+        temp.duration = self.duration
+        temp.frequency = [subsystem.refresh_rate /]
+        temp.type = '[sensor.oclAsType(VisionSensor).type.toString().toLower() /]'
+        temp.name = '[sensor.oclAsType(VisionSensor).name /]'  
+        temp.resolutionId = '[sensor.oclAsType(VisionSensor).resolution.toString().substring(3)/]'
+                   
+        self.mySensors.append(temp)
+        self.myCategories.append('[subsystem.category.toString().toUpper() /]')
+        
+        # Data needed for API
+        redisAPI.delete_from_redis(temp.name)
+        self.mySensorsIds.append(str({  'category': temp.category, 'sensor': temp.name, 'index': temp.type, 'frequency': temp.frequency, 
+                                        'resolution': temp.resolutionId  }))
+
+        temp.get_vision_sensor()
+			[/if]
+		[/for]
+		
+	[elseif subsystem.oclIsTypeOf(AcousticSystem)]
+        #Creating Acoustic Sensors
+
+        temp = sensors.AcousticSystem()
+
+        temp.category = '[subsystem.oclAsType(AcousticSystem).category.toString().toUpper() /]'
+        temp.duration = self.duration
+        temp.frequency = [subsystem.oclAsType(AcousticSystem).refresh_rate /]
+        temp.description = '[subsystem.oclAsType(AcousticSystem).description /]'  
+        tempTime = [subsystem.oclAsType(AcousticSystem).recordTime /]
+                [if (subsystem.oclAsType(AcousticSystem).timeFormat.toString() = 'SECONDS')]
+        temp.recordTime = tempTime
+				[elseif (subsystem.oclAsType(AcousticSystem).timeFormat.toString() = 'MINUTES')]
+        temp.recordTime = tempTime * 60
+				[elseif (subsystem.oclAsType(AcousticSystem).timeFormat.toString() = 'HOURS')]
+        temp.recordTime = tempTime * 3600
+				[/if]  
+        temp.myMicrophones = list()
+
+		[for (sensor: Sensor  | subsystem.hasSensor)]
+			[if (sensor.oclIsTypeOf(AcousticSensor))]
+				[if (sensor.oclAsType(AcousticSensor).type.toString() = 'MICFRONT')]
+        temp.myMicrophones.append('micFront')
+        temp.get_acoustic_sensor('[sensor.oclAsType(AcousticSensor).name.toString()/]')
+				[elseif (sensor.oclAsType(AcousticSensor).type.toString() = 'MICREAR')]
+        temp.myMicrophones.append('micRear')
+        temp.get_acoustic_sensor('[sensor.oclAsType(AcousticSensor).name.toString()/]')
+				[elseif (sensor.oclAsType(AcousticSensor).type.toString() = 'MICLEFT')]
+        temp.myMicrophones.append('micLeft')
+        temp.get_acoustic_sensor('[sensor.oclAsType(AcousticSensor).name.toString()/]')
+				[elseif (sensor.oclAsType(AcousticSensor).type.toString() = 'MICRIGHT')]
+        temp.myMicrophones.append('micRight')
+        temp.get_acoustic_sensor('[sensor.oclAsType(AcousticSensor).name.toString()/]')
+				[/if]
+			[/if]
+		[/for]
+		
+        self.mySensors.append(temp)
+        self.myCategories.append('[subsystem.category.toString().toUpper() /]')
+        mics = ''
+        if len(temp.myMicrophones) == 1:
+            mics = temp.myMicrophones['['/]0[']'/]
+        else:
+            for name in temp.myMicrophones:
+                if name == temp.myMicrophones['['/]-1[']'/]:
+                    mics = mics + str(name)
+                else:
+                    mics = mics + str(name) + ', '  
+
+        # Data needed for API
+        redisAPI.delete_from_redis(temp.description)
+        self.mySensorsIds.append(str({  'category': temp.category, 'sensor': temp.description, 
+                                        'index': mics, 'frequency': temp.frequency, 
+                                        'recordTime': str(temp.recordTime)}))
+	
+	[/if]	
+	
+[/for]   
+        # Cleaning Redis Database and saving system's data  
+             
+        self.myCategories = list(set(self.myCategories))
+        redisAPI.delete_from_redis('categories')
+        redisAPI.save_categories(self.myCategories)
+        redisAPI.delete_from_redis('sensors_parameters')
+        redisAPI.save_sensors_parameters(self.mySensorsIds)
+        
+            
+[/file]
+[/template]

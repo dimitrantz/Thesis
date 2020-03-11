@@ -1,0 +1,85 @@
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module VisionSensorBase.
+ */]
+[module VisionSensorBase('platform:/plugin/SensorProject/model/sensorProject.ecore')]
+
+
+[**
+ * The documentation of the template generateElement.
+ * @param aSensorSystem
+ */]
+[template public VisionSensorBase(aSensorSystem: SensorSystem) post(trim())]
+
+[file ('factory/visionSensor.py', false, 'UTF-8')]
+"""
+@author: Dimitra Ntzioni
+ python 2.7
+"""
+
+import time
+
+from PIL import Image, ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+
+import saveToRedis as redisAPI
+from sensor import Sensor
+
+import R4ARobotRestApi as api # R4A Library
+from R4ARobotWsApi import RobotWsAPI as rws # R4A Library
+
+api.configuration.api_key['['/]'api_key'[']'/] = 'r4a_default_key'
+api.configuration.host = 'localhost:8080'
+
+
+class VisionSensor(Sensor):
+    '''Common base class for a VisionSensor'''
+
+    def __init__(self):
+        
+        Sensor.__init__(self)
+
+        self.category = 'VISION'
+        self.name = 'visionSensor'
+        self.controller =  api.SensorsVisionApi()
+        self.type = 'top'
+        self.resolutionId = '640x480'
+        
+
+    def get_vision_sensor(self):
+        '''Function returning a string containing the description of a
+           vision sensor.'''
+        
+        res = self.controller.getVisionSensor(self.type)
+        redisAPI.save_sensor_info(self.name, res)
+
+
+    def capture_picture(self):
+        '''Performs RGB image capturing using a specific camera.'''
+
+        res = self.controller.getRgbImageFile(self.type, self.resolutionId)
+        timestamp = time.time()
+        name = 'camera' + self.type + '_' + str(timestamp) + '.png'
+
+        new_image =  Image.open(res, 'r')
+        new_image.save('/home/user/Thesis/data-visualization/react-web-app/mythesis-app/public/images/' + name)
+        redisAPI.save_image(self.name, name, timestamp)  
+
+        
+    def start_measuring(self):
+        '''Captures a picture using a vision sensor every 1/freq seconds.'''
+    
+        endtime = time.time() + self.duration
+        
+        # timer's argument in sec
+        while time.time() < endtime:
+        
+            start = time.time()
+            self.capture_picture()
+            time_elapsed = time.time() - start
+
+            if self.frequency > time_elapsed:
+                time.sleep(self.frequency - time_elapsed)
+
+[/file]
+[/template]

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:diagram="http://www.eclipse.org/sirius/diagram/1.1.0" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sensorProject="platform:/plugin/SensorProject/model/sensorProject.ecore" xmlns:viewpoint="http://www.eclipse.org/sirius/1.1.0" xsi:schemaLocation="http://www.eclipse.org/sirius/description/1.1.0 http://www.eclipse.org/sirius/1.1.0#//description http://www.eclipse.org/sirius/diagram/description/1.1.0 http://www.eclipse.org/sirius/diagram/1.1.0#//description">
+  <viewpoint:DAnalysis xmi:id="_FRL0YDjEEemTFLZP_nI6ng" selectedViews="_NWnDYDjEEemTFLZP_nI6ng" version="12.1.0.201708031200">
+    <semanticResources>MySensorSystem.sensorproject</semanticResources>
+    <ownedViews xmi:type="viewpoint:DView" xmi:id="_NWnDYDjEEemTFLZP_nI6ng">
+      <viewpoint xmi:type="description:Viewpoint" href="platform:/resource/SensorProject.design/description/SensorProject.odesign#//@ownedViewpoints[name='sensors']"/>
+      <ownedRepresentationDescriptors xmi:type="viewpoint:DRepresentationDescriptor" xmi:id="_NX_jcDjEEemTFLZP_nI6ng" name="DevelopSystem" repPath="#_NWu_MDjEEemTFLZP_nI6ng">
+        <description xmi:type="description_1:DiagramDescription" href="platform:/resource/SensorProject.design/description/SensorProject.odesign#//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']"/>
+        <target xmi:type="sensorProject:SensorSystem" href="MySensorSystem.sensorproject#/"/>
+      </ownedRepresentationDescriptors>
+    </ownedViews>
+  </viewpoint:DAnalysis>
+  <diagram:DSemanticDiagram xmi:id="_NX6D4DjEEemTFLZP_nI6ng" name="DevelopSystem" uid="_NWu_MDjEEemTFLZP_nI6ng">
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" xmi:id="_NX6D4TjEEemTFLZP_nI6ng" source="DANNOTATION_CUSTOMIZATION_KEY">
+      <data xmi:type="diagram:ComputedStyleDescriptionRegistry" xmi:id="_NX6D4jjEEemTFLZP_nI6ng"/>
+    </ownedAnnotationEntries>
+    <ownedAnnotationEntries xmi:type="description:AnnotationEntry" xmi:id="_NZTyEDjEEemTFLZP_nI6ng" source="GMF_DIAGRAMS">
+      <data xmi:type="notation:Diagram" xmi:id="_NZUZIDjEEemTFLZP_nI6ng" type="Sirius" element="_NX6D4DjEEemTFLZP_nI6ng" measurementUnit="Pixel">
+        <styles xmi:type="notation:DiagramStyle" xmi:id="_NZUZITjEEemTFLZP_nI6ng"/>
+      </data>
+    </ownedAnnotationEntries>
+    <description xmi:type="description_1:DiagramDescription" href="platform:/resource/SensorProject.design/description/SensorProject.odesign#//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']"/>
+    <filterVariableHistory xmi:type="diagram:FilterVariableHistory" xmi:id="_NX6D5DjEEemTFLZP_nI6ng"/>
+    <activatedLayers xmi:type="description_1:Layer" href="platform:/resource/SensorProject.design/description/SensorProject.odesign#//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer"/>
+    <target xmi:type="sensorProject:SensorSystem" href="MySensorSystem.sensorproject#/"/>
+  </diagram:DSemanticDiagram>
+</xmi:XMI>

@@ -1,0 +1,29 @@
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module SensorBase.
+ */]
+[module SensorBase('platform:/plugin/SensorProject/model/sensorProject.ecore')]
+
+
+[**
+ * The documentation of the template generateElement.
+ * @param aSensorSystem
+ */]
+
+[template public SensorBase(aSensorSystem: SensorSystem) post(trim())]
+
+[file ('factory/sensor.py', false, 'UTF-8')]
+"""
+@author: Dimitra Ntzioni
+ python 2.7
+"""
+class Sensor():
+    '''Common base class for a Sensor'''
+
+    def __init__(self):
+        
+        self.duration = 0.0
+        self.frequency = 0.0
+        self.category = ' '
+[/file]
+[/template]

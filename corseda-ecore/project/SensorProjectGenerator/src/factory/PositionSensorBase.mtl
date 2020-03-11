@@ -1,0 +1,89 @@
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module PositionSensorBase.
+ */]
+[module PositionSensorBase('platform:/plugin/SensorProject/model/sensorProject.ecore')]
+
+
+[**
+ * The documentation of the template generateElement.
+ * @param aSensorSystem
+ */]
+[template public PositionSensorBase(aSensorSystem: SensorSystem) post(trim())]
+
+[file ('factory/positionSensor.py', false, 'UTF-8')]
+"""
+@author: Dimitra Ntzioni
+ python 2.7
+"""
+
+import time
+
+import saveToRedis as redisAPI
+from sensor import Sensor
+
+import R4ARobotRestApi as api # R4A Library
+from R4ARobotWsApi import RobotWsAPI as rws # R4A Library
+
+api.configuration.api_key['['/]'api_key'[']'/] = 'r4a_default_key'
+api.configuration.host = 'localhost:8080'
+
+
+        
+#  Position Sensors         
+class PositionSensor(Sensor):
+    '''Common base class for a PositionSensor'''
+	
+    def __init__(self):
+        
+        Sensor.__init__(self)
+        
+        self.category = 'POSITION'
+        self.controller = api.SensorsPositionApi()
+        self.name = 'Position Sensor'
+        self.type = 'Localization'
+
+
+    def get_position_sensor(self):
+        '''Function returning a string containing the description of a 
+           position sensor.'''
+        
+        res = self.controller.getPositionSensor(self.type)
+        redisAPI.save_sensor_info(self.name, res)
+
+    def get_position_measurement(self):
+        '''Function returning the measurements of a sensor.'''             
+        
+        res = self.controller.getPositionSensorMeasurement(self.type) 
+        
+
+        if (hasattr(res, 'pose')):
+
+            redisAPI.save_measurement(self.name,res)
+
+        elif (hasattr(res, 'error')):
+
+            redisAPI.save_measurement(self.name,{'data': res['['/]'error'[']'/], 'timestamp':res['['/]'timestamp'[']'/]})
+        
+        else:
+            tempArray = list()
+            tempArray.append(['['/]"ERROR Position Measurement",time.time()[']'/])
+            print tempArray
+
+    def start_measuring(self):
+        '''Gets a measurement of the position sensor every 1/max_hz seconds'''
+        
+        endtime = time.time() + self.duration
+       
+        # timer's argument in sec
+        while time.time() < endtime:
+           
+            start = time.time() 
+            self.get_position_measurement()
+            time_elapsed = time.time() - start
+
+            if self.frequency > time_elapsed:
+                time.sleep(self.frequency - time_elapsed)
+      
+[/file]
+[/template]

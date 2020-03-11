@@ -1,0 +1,69 @@
+[comment encoding = UTF-8 /]
+[module main('platform:/plugin/SensorProject/model/sensorProject.ecore')]
+
+
+
+[import factory::SensorsUtilities/]
+[import factory::RedisAPI/]
+
+
+[template public main(aSensorSystem : SensorSystem)]
+[comment @main /]
+
+
+[RedisAPI()/]
+[SensorsUtilities(aSensorSystem)/]
+
+[file ('factory/main.py', false, 'UTF-8')]
+"""
+@author: Dimitra Ntzioni
+ -*- coding: utf-8 -*-
+"""
+import threading
+from sensorSystem import SensorSystem
+
+
+class myThread (threading.Thread):
+    
+    def __init__(self, sensor):       
+        threading.Thread.__init__(self)     
+        self.sensor = sensor
+      
+    def run(self):     
+        self.sensor.start_measuring()
+        
+
+if __name__ == "__main__":
+
+    # Creating Sensor System  
+    print "Loading System..." 
+    system = SensorSystem()
+    # Loading System's sensors
+    system.setSystem() 
+    
+    threads = list()    
+    
+    # Creating multiple threads, one per sensor
+    try:
+        for sensor in system.mySensors:
+
+            thread_temp = myThread(sensor)
+            # Starting new threads
+            thread_temp.start()
+            # Adding threads to thread list
+            threads.append(thread_temp)
+
+        #Waiting for all threads to finish
+        for t in threads:
+            t.join()
+
+    except:
+        print "Error: unable to start thread"
+
+    #Exiting
+    print "Exiting Program..."
+  
+[/file]
+
+	
+[/template]

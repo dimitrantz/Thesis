@@ -1,0 +1,92 @@
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module DistanceSensorBase.
+ */]
+[module DistanceSensorBase('platform:/plugin/SensorProject/model/sensorProject.ecore')]
+
+
+[**
+ * The documentation of the template generateElement.
+ * @param aSensorSystem
+ */]
+[template public DistanceSensorBase(aSensorSystem: SensorSystem) post(trim())]
+
+[file ('factory/distanceSensor.py', false, 'UTF-8')]
+"""
+@author: Dimitra Ntzioni
+ python 2.7
+"""
+import time
+
+import saveToRedis as redisAPI
+from sensor import Sensor
+
+import R4ARobotRestApi as api # R4A Library
+from R4ARobotWsApi import RobotWsAPI as rws # R4A Library
+
+api.configuration.api_key['['/]'api_key'[']'/] = 'r4a_default_key'
+api.configuration.host = 'localhost:8080'
+
+#  Distance Sensors         
+class DistanceSensor(Sensor):
+    '''Common base class for a DistanceSensor'''
+	
+    def __init__(self):
+        
+        Sensor.__init__(self)
+        
+        self.controller = api.SensorsDistanceApi()
+        self.category = 'DISTANCE'
+        self.name = ' '
+        self.type = ' '
+        self.maxDistance = 0.8
+        self.minDistance = 0.2
+        self.alarmValue = -1.0
+        
+
+    def get_distance_sensor(self):
+        '''Function returning a string containing the description of a 
+           distance sensor.'''
+        
+        res = self.controller.getDistanceSensor(self.type)
+        redisAPI.save_sensor_info(self.name, res)
+
+    def get_distance_measurement(self):
+        '''Function returning the last measurement of a sensor.'''
+                       
+        
+        res = self.controller.getDistanceSensorMeasurement(self.type) 
+        
+
+        if (hasattr(res, 'data')):
+            if(res.data['['/]-1[']'/] >= self.minDistance and res.data['['/]-1[']'/] <= self.maxDistance):     
+
+                redisAPI.save_measurement(self.name,res)
+
+        elif (hasattr(res, 'error')):
+
+            redisAPI.save_measurement(self.name,{'data': res['['/]'error'[']'/], 'timestamp':res['['/]'timestamp'[']'/]})
+        
+        else:
+            
+            tempArray = ['['/]"ERROR Distance Measurement",time.time()[']'/]
+            print tempArray
+
+    def start_measuring(self):
+        '''Gets a measurement of the distance sensor every 1/max_hz seconds'''
+        
+        endtime = time.time() + self.duration
+        
+        while time.time() < endtime:
+
+            start = time.time()
+            self.get_distance_measurement()
+            time_elapsed = time.time() - start
+            
+            if self.frequency > time_elapsed:
+                time.sleep(self.frequency - time_elapsed)
+        
+            
+            
+[/file]
+[/template]

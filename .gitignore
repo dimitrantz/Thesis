@@ -12,6 +12,7 @@ flask_app/*.DS_Store
 *.pyc 
 thesisenv 
 .env
-project
+
 Corseda-workplace
+runtime-Corseda
 

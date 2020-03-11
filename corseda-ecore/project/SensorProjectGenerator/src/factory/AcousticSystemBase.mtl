@@ -1,0 +1,99 @@
+
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module AcousticSensorBase.
+ */]
+[module AcousticSystemBase('platform:/plugin/SensorProject/model/sensorProject.ecore')]
+
+
+[**
+ * The documentation of the template generateElement.
+ * @param aSensorSystem
+ */]
+[template public AcousticSystemBase(aSensorSubSystem: SensorSystem) post(trim())]
+
+[file ('factory/acousticSystem.py', false, 'UTF-8')]
+"""
+@author: Dimitra Ntzioni
+ python 2.7
+"""
+import time
+
+import wave, struct
+import scipy.io.wavfile 
+
+import saveToRedis as redisAPI
+from sensor import Sensor 
+
+import R4ARobotRestApi as api # R4A Library
+from R4ARobotWsApi import RobotWsAPI as rws # R4A Library
+
+api.configuration.api_key['['/]'api_key'[']'/] = 'r4a_default_key' 
+api.configuration.host = 'localhost:8080'
+
+class AcousticSystem(Sensor):
+    '''Common base class for an Acoustic System'''
+
+    def __init__(self):
+        
+        Sensor.__init__(self)
+
+        self.category = 'ACOUSTIC'
+        self.description = ' '
+        self.controller =  api.SensorsAcousticApi()
+        self.recordTime = 6.0
+        self.myMicrophones = list()
+
+    def get_acoustic_sensor(self, name):
+        '''Function returning a string containing the description of an
+           acoustic sensor.'''
+        
+        res = self.controller.getAcousticSensor(name)
+        redisAPI.save_sensor_info(name, res)
+            
+
+        
+    def record_file(self):
+        '''Function recording a .wav file using specific microphones
+           from the acoustic system created.'''
+        
+        res = self.controller.recordAudioFile(self.myMicrophones, self.recordTime)
+        timestamp = time.time()
+        name = 'audio' + str(timestamp) + '.wav'
+
+        
+        
+        waveFile = wave.open(res, 'rb')
+        rate, data = scipy.io.wavfile.read(res)
+        ['['/]nchannels, sampwidth, framerate, nframes, comptype, compname[']'/] = waveFile.getparams()    
+
+        wav_saved = wave.open('/home/user/Thesis/data-visualization/react-web-app/mythesis-app/public/audios/' + name, "w")
+        wav_saved.setparams((nchannels, sampwidth, framerate, nframes, comptype, compname))
+        for sample in data:
+                wav_saved.writeframes(struct.pack('h', int( sample)))
+
+        redisAPI.save_audio(self.description, name, timestamp)
+        
+    
+    def start_measuring(self):
+        '''Gets a measurement of the acoustic system every 1/freq seconds'''
+[if (aSensorSubSystem.eContents()->filter(sensorProject::AcousticSystem)->select(t | t.measureOnce.toString().toUpper() = 'FALSE')->size() > 0)]   
+        endtime = time.time() + self.duration
+		
+        self.record_file()
+
+        while time.time() < endtime:
+
+
+           start = time.time()
+           self.record_file()
+           time_elapsed = time.time() - start
+
+           if self.frequency > time_elapsed:
+               time.sleep(self.frequency - time_elapsed)
+[elseif (aSensorSubSystem.eContents()->filter(sensorProject::AcousticSystem)->select(t | t.measureOnce.toString().toUpper() = 'TRUE')->size() > 0)]
+
+        self.record_file()
+[/if]
+[/file]
+[/template]

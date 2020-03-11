@@ -1,0 +1,871 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description:Group xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:description="http://www.eclipse.org/sirius/description/1.1.0" xmlns:description_1="http://www.eclipse.org/sirius/diagram/description/1.1.0" xmlns:properties="http://www.eclipse.org/sirius/properties/1.0.0" xmlns:properties-ext-widgets-reference="http://www.eclipse.org/sirius/properties/1.0.0/ext/widgets/reference" xmlns:style="http://www.eclipse.org/sirius/diagram/description/style/1.1.0" xmlns:tool="http://www.eclipse.org/sirius/description/tool/1.1.0" xmlns:tool_1="http://www.eclipse.org/sirius/diagram/description/tool/1.1.0" xmlns:validation="http://www.eclipse.org/sirius/description/validation/1.1.0" name="SensorProject" version="12.0.0.2017041100">
+  <ownedViewpoints name="sensors" modelFileExtension="sensorproject">
+    <validationSet name="System Validation">
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="Sys: Negative or Empty duration value" level="ERROR" message="The system has a zero or negative duration value" targetClass="sensorProject::SensorSystem">
+        <audits auditExpression="aql: self.duration > 0.0"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="Sys: Empty system" level="ERROR" message="The System must contain  at least one syb system with one sensor " targetClass="sensorProject::SensorSystem">
+        <audits auditExpression="aql: self.hasSubsystem->size() > 0"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="SSys: Empty refresh rate value" level="ERROR" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem has Refresh Rate: 0.0 Hz '" targetClass="sensorProject::SubSystem">
+        <audits auditExpression="aql: self.refresh_rate &lt;> 0.0"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="SSys: Negative refresh rate value" level="ERROR" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem has negative Refresh Rate value'" targetClass="sensorProject::SubSystem">
+        <audits auditExpression="aql: self.refresh_rate >= 0.0"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="SSys: Empty Subsystem" level="ERROR" message="aql: 'Subsystem described as (' + self.description + ' ) must have at least one sensor'" targetClass="sensorProject::SubSystem">
+        <audits auditExpression="aql: self.eContents()->size() &lt;> 0"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ASys: Valid Category" level="ERROR" message="aql: 'Acoustic System: Category value is not valid(' + self.category + ' ) . It should be Acoustic'" targetClass="sensorProject::AcousticSystem">
+        <audits auditExpression="aql: self.category.toString() = 'ACOUSTIC'"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ASys: No whitespace on description" level="ERROR" message="Acoustic Subsystem's description cannot contain any whitespaces" targetClass="sensorProject::AcousticSystem">
+        <audits auditExpression="aql: not( self.description.toString().trim().contains(' '))"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ASys: Negative or Empty recordTime value" level="ERROR" message="Acoustic Sub System has zero or negative recordTime value" targetClass="sensorProject::AcousticSystem">
+        <audits auditExpression="aql: self.recordTime > 0.0"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ASys: Empty description value" level="ERROR" message="Acoustic Sub System must have a description value" targetClass="sensorProject::AcousticSystem">
+        <audits auditExpression="aql: self.description.size() &lt;> 0"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ASys: recordTime lower than system's duration | same timeFormat" level="ERROR" message="Acoustic System: record time must be lower than the system's duration" targetClass="sensorProject::AcousticSystem">
+        <audits auditExpression="aql: self.timeFormat = self.eContainer().timeFormat implies self.recordTime &lt;= self.eContainer().duration"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ASys: recordTime lower than system's duration | min - sec timeFormat" level="ERROR" message="Acousitc System: Fatal error, record time of the subsystem cannot be greater than the System's duration" targetClass="sensorProject::AcousticSystem">
+        <audits auditExpression="aql: (( self.timeFormat.toString() = 'MINUTES') and (self.eContainer().timeFormat.toString() = 'SECONDS')) implies  ((self.recordTime * 60.0) &lt;= self.eContainer().duration)"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ASys: recordTime lower than system's duration | hour-min timeFormat" level="ERROR" message="Acousitc System: Fatal error, record time of the subsystem cannot be greater than the System's duration" targetClass="sensorProject::AcousticSystem">
+        <audits auditExpression="aql: (( self.timeFormat.toString() = 'HOURS') and (self.eContainer().timeFormat.toString() = 'MINUTES')) implies  ((self.recordTime * 60.0) &lt;= self.eContainer().duration)"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ASys: recordTime lower than system's duration | hour-sec timeFormat" level="ERROR" message="Acousitc System: Fatal error, record time of the subsystem cannot be greater than the System's duration" targetClass="sensorProject::AcousticSystem">
+        <audits auditExpression="aql: (( self.timeFormat.toString() = 'HOURS') and (self.eContainer().timeFormat.toString() = 'SECONDS')) implies  ((self.recordTime *3600.0) &lt;= self.eContainer().duration)"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ASys: recordTime lower than refresh rate | same format" level="ERROR" message="Acoustic System: record time must be lower than refresh rate" targetClass="sensorProject::AcousticSystem">
+        <audits auditExpression="aql: self.measureOnce.toString() = 'false' implies ( self.timeFormat.toString() = 'SECONDS' implies self.recordTime &lt;= self.refresh_rate)"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ASys: recordTime lower than refresh rate | min format" level="ERROR" message="Acoustic System: record time must be lower than refresh rate" targetClass="sensorProject::AcousticSystem">
+        <audits auditExpression="aql: self.measureOnce.toString() = 'false' implies ( self.timeFormat.toString() = 'MINUTES' implies ( (self.recordTime * 60.0) &lt;= self.refresh_rate) )"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ASys: Unique descriptions" level="ERROR" message="Acoustic Systems must have a unique description" targetClass="sensorProject::AcousticSystem">
+        <audits auditExpression="aql: self.eContainer().eAllContents()->filter(sensorProject::AcousticSystem)->select(rs | rs&lt;>self)->forAll(rs | rs.description &lt;> self.description)"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ASys: recordTime lower than refresh rate | min format" level="ERROR" message="Acoustic System: record time must be lower than refresh rate" targetClass="sensorProject::AcousticSystem">
+        <audits auditExpression="aql: self.timeFormat.toString() = 'HOURS' implies ( (self.recordTime *3600.0) &lt;= self.refresh_rate)"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="DSys: Distance Category" level="ERROR" message="aql: 'Distance System: Category value is not valid(' + self.category + ' ) . It should be Distance'" targetClass="sensorProject::DistanceSystem">
+        <audits auditExpression="aql: self.category.toString() = 'DISTANCE'"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ESys: Valid Category" level="ERROR" message="aql: 'Electric System: Category value is not valid(' + self.category + ' ) . It should be Electric'" targetClass="sensorProject::ElectricSystem">
+        <audits auditExpression="aql: self.category.toString() = 'ELECTRIC'"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="PoSys: Valid Category" level="ERROR" message="aql: 'Position System: Category value is not valid(' + self.category + ' ) . It should be Position'" targetClass="sensorProject::PositionSystem">
+        <audits auditExpression="aql: self.category.toString() = 'POSITION'"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="PrSys: Valid Category" level="ERROR" message="aql: 'Pressure System: Category value is not valid(' + self.category + ' ) . It should be Pressure'" targetClass="sensorProject::PressureSystem">
+        <audits auditExpression="aql: self.category.toString() = 'PRESSURE'"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="SpSys: Valid Category" level="ERROR" message="aql: 'Speed System: Category value is not valid(' + self.category + ' ) . It should be Speed'" targetClass="sensorProject::SpeedSystem">
+        <audits auditExpression="aql: self.category.toString() = 'SPEED'"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="VSys: Valid Category" level="ERROR" message="aql: 'Vision System: Category value is not valid(' + self.category + ' ) . It should be Vision'" targetClass="sensorProject::VisionSystem">
+        <audits auditExpression="aql: self.category.toString() = 'VISION'"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="Sensor: Unique names" level="ERROR" message="All sensors must have unique names" targetClass="sensorProject::Sensor">
+        <audits auditExpression="aql: self.eContainer().eContainer().eAllContents()->filter(sensorProject::Sensor)->select(rs | rs&lt;>self)->forAll(rs | rs.name &lt;> self.name)"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="AS: Unique Ids" level="ERROR" message="Acoustic sensor: Sensors must have unique type ids (FRONT-LEFT-RIGHT-REAR)" targetClass="sensorProject::AcousticSensor">
+        <audits auditExpression="aql: self.eContainer().eContainer().eAllContents()->filter(sensorProject::AcousticSensor)->select(rs | rs&lt;>self)->forAll(rs | rs.type &lt;> self.type)"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="DS: Range alarmValue " level="ERROR" message="aql: 'Distance Sensor: alarm Value (' + self.alarmValue + ' ) should have a value between '  + self.minDistanceAccepted + ' and ' + self.maxDistanceAccepted" targetClass="sensorProject::DistanceSensor">
+        <audits auditExpression="aql: self.notifications.toString().toUpper() = 'TRUE' implies ( (self.alarmValue >= self.minDistanceAccepted) and (self.alarmValue &lt;= self.maxDistanceAccepted))"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="DS: Non empty alarm value  -> Notifications on" level="ERROR" message="Distance Sensor: Notifications must be activated if the Alarm Value is differenct than 0.0" targetClass="sensorProject::DistanceSensor">
+        <audits auditExpression="aql:  self.alarmValue &lt;> 0.0 implies self.notifications.toString().toUpper() = 'TRUE'"/>
+        <fixes name="Set Notifications On">
+          <initialOperation>
+            <firstModelOperations xsi:type="tool:SetValue" featureName="notifications" valueExpression="aql: true"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="DS: minDistanceAccepted value > maxDistanceAccepted value" level="ERROR" message=" Distance Sensor: MinDistanceAccepted value must be lower than MaxDistanceAccepted value" targetClass="sensorProject::DistanceSensor">
+        <audits auditExpression="aql: self.minDistanceAccepted &lt;=  self.maxDistanceAccepted"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="DS: Range MaxDistanceAccepted" level="ERROR" message="aql: 'Distance Sensor: MaxDistanceAccepted ( ' + self.maxDistanceAccepted+ ' )value should have a value between 0.23 and 1.8'" targetClass="sensorProject::DistanceSensor">
+        <audits auditExpression="aql: self.maxDistanceAccepted >= 0.23 and  self.maxDistanceAccepted &lt;= 1.8"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="DS: Range MinDistanceAccepted" level="ERROR" message="aql: 'Distance Sensor: MinDistanceAccepted ( ' + self.minDistanceAccepted+ ' )value should have a value between 0.23 and 1.8'" targetClass="sensorProject::DistanceSensor">
+        <audits auditExpression="aql: self.minDistanceAccepted >= 0.23 and  self.minDistanceAccepted &lt;= 1.80"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="DS: Unique Ids" level="ERROR" message="Distance sensor: Sensors must have unique type ids (LEFT-RIGHT)" targetClass="sensorProject::DistanceSensor">
+        <audits auditExpression="aql: self.eContainer().eContainer().eAllContents()->filter(sensorProject::DistanceSensor)->select(rs | rs&lt;>self)->forAll(rs | rs.type &lt;> self.type)"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ES: Non empty alarm value  -> Notifications on" level="ERROR" message="Electric Sensor: Notifications must be activated if the Alarm Value has a non zero value" targetClass="sensorProject::ElectricSensor">
+        <audits auditExpression="aql:  self.alarmValue &lt;> 0.0 implies self.notifications.toString().toUpper() = 'TRUE'"/>
+        <fixes name="Set Notifications On">
+          <initialOperation>
+            <firstModelOperations xsi:type="tool:SetValue" featureName="notifications" valueExpression="aql: true"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ES: Range alarmValue " level="ERROR" message="aql: 'Electric Sensor: alarm Value (' + self.alarmValue + ' %) should have a value between 0.0 and 100.0 '" targetClass="sensorProject::ElectricSensor">
+        <audits auditExpression="aql: self.notifications.toString().toUpper() = 'TRUE' implies ( self.alarmValue >= 0.0) and (self.alarmValue &lt;= 100.0))"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="PoS: Unique Ids" level="ERROR" message="Position Sensors must have unique type Ids" targetClass="sensorProject::PositionSensor">
+        <audits auditExpression="aql: self.eContainer().eContainer().eAllContents()->filter(sensorProject::PositionSensor)->select(rs | rs&lt;>self)->forAll(rs | rs.type &lt;> self.type)"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="PrS: Unique Ids" level="ERROR" message="Pressure sensor: Sensors must have unique type ids " targetClass="sensorProject::PressureSensor">
+        <audits auditExpression="aql: self.eContainer().eContainer().eAllContents()->filter(sensorProject::PressureSensor)->select(rs | rs&lt;>self)->forAll(rs | rs.type &lt;> self.type)"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="TrS: Unique Ids" level="ERROR" message="Tframe sensor: Sensors must have unique origin ids " targetClass="sensorProject::TframeSensor">
+        <audits auditExpression="aql: self.eContainer().eContainer().eAllContents()->filter(sensorProject::TframeSensor)->select(p | p &lt;> self)->forAll( t | (t.origin &lt;>  self.origin and t.target  = self.target) or (t.origin =  self.origin and t.target  &lt;>  self.target))"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="VS: Unique Ids" level="ERROR" message="Vision sensor: Sensors must have unique type ids (TOP-BOTTOM)" targetClass="sensorProject::VisionSensor">
+        <audits auditExpression="aql: self.eContainer().eContainer().eAllContents()->filter(sensorProject::DistanceSensor)->select(rs | rs&lt;>self)->forAll(rs | rs.type &lt;> self.type)"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="PosS: Unique Ids" level="ERROR" message="aql: 'Posture Sensor: There can be only one Posture Sensor and you have ' + self.eContainer().eContainer().eAllContents()->filter(sensorProject::PostureSensor)->size()" targetClass="sensorProject::PostureSensor">
+        <audits auditExpression="aql: self.eContainer().eContainer().eAllContents()->filter(sensorProject::PostureSensor)->select(rs | rs&lt;>self)->forAll(rs | rs.type &lt;> self.type)"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="ASys: Same measure once value" level="ERROR" message="Acoustic Systems must have same measureOnce value" targetClass="sensorProject::AcousticSystem">
+        <audits auditExpression="aql: self.eContainer().eAllContents()->filter(sensorProject::AcousticSystem)->select(rs | rs&lt;>self)->forAll(rs | rs.measureOnce = self.measureOnce)"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="Number of sensors &lt;= 3" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate should be 0.2'" targetClass="sensorProject::SubSystem">
+        <audits auditExpression="aql:  if (not(self.oclIsKindOf(sensorProject::VisionSystem)) then  ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() > 0) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt; 4)) implies self.refresh_rate >=0.2 else ' ' endif"/>
+        <fixes name="Set the refresh rate to minimum value">
+          <initialOperation>
+            <firstModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="aql: 0.2"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="4 &lt; Number of sensors &lt;= 16" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate should be 0.23'" targetClass="sensorProject::SubSystem">
+        <audits auditExpression="aql:  if (not(self.oclIsKindOf(sensorProject::VisionSystem)) then  ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() >= 4) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt;=16)) implies self.refresh_rate >=0.23 else ' ' endif"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="Number of sensors = 17" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate should be 0.25'" targetClass="sensorProject::SubSystem">
+        <audits auditExpression="aql: if (not(self.oclIsKindOf(sensorProject::VisionSystem)) then  (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() = 17) implies self.refresh_rate >= 0.25 else ' ' endif"/>
+        <fixes name="Set the refresh rate to minimum value">
+          <initialOperation>
+            <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="aql: self">
+              <subModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="aql: 0.25"/>
+            </firstModelOperations>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="18 &lt;= Number of sensors &lt;= 19" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate should be 0.3'" targetClass="sensorProject::SubSystem">
+        <audits auditExpression="aql:  if (not(self.oclIsKindOf(sensorProject::VisionSystem)) then ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() >= 18) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt;=19)) implies self.refresh_rate >=0.3 else ' ' endif"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="20 &lt;= Number of sensors &lt;= 22" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate should be 0.4'" targetClass="sensorProject::SubSystem">
+        <audits auditExpression="aql:  if (not(self.oclIsKindOf(sensorProject::VisionSystem)) then  ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() >= 20) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt;=22)) implies self.refresh_rate >=0.4 else ' ' endif"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="23 &lt;= Number of sensors &lt;= 30" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate should be 0.5'" targetClass="sensorProject::SubSystem">
+        <audits auditExpression="aql:  if (not(self.oclIsKindOf(sensorProject::VisionSystem)) then  ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() >= 23) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt;=30)) implies self.refresh_rate >=0.5 else ' ' endif"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="31 &lt;= Number of sensors &lt;= 40" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate should be 0.6'" targetClass="sensorProject::SubSystem">
+        <audits auditExpression="aql:  if (not(self.oclIsKindOf(sensorProject::VisionSystem)) then  ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() >= 31) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt;=40)) implies self.refresh_rate >=0.6 else ' ' endif"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="41 &lt;= Number of sensors &lt;= 42" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate should be 0.7'" targetClass="sensorProject::SubSystem">
+        <audits auditExpression="aql:  if (not(self.oclIsKindOf(sensorProject::VisionSystem)) then ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() >= 41) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt;=42)) implies self.refresh_rate >=0.7 else ' ' endif"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="43 &lt;= Number of sensors &lt;= 44" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate should be 0.9'" targetClass="sensorProject::SubSystem">
+        <audits auditExpression="aql:  if (not(self.oclIsKindOf(sensorProject::VisionSystem)) then ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() >= 43) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt;=44)) implies self.refresh_rate >=0.9 else ' ' endif"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="45 &lt;= Number of sensors &lt;= 50" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate should be 1.0'" targetClass="sensorProject::SubSystem">
+        <audits auditExpression="aql: if (not(self.oclIsKindOf(sensorProject::VisionSystem)) then ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() >= 45) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt;=50)) implies self.refresh_rate >=1.0 else ' ' endif"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="50 &lt;= Number of sensors" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate should be 2.0'" targetClass="sensorProject::SubSystem">
+        <audits auditExpression="aql:  if (not(self.oclIsKindOf(sensorProject::VisionSystem)) then (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() >= 50) implies self.refresh_rate >= 2.0 else ' ' endif"/>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="Number of sensors &lt;= 3 with  camera" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate of this subsystem should be 0.5'" targetClass="sensorProject::VisionSystem">
+        <audits auditExpression="aql: ((self.eContainer().eAllContents()->filter(sensorProject::VisionSystem)->size() > 0) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt; 4)) implies self.refresh_rate >=0.5"/>
+        <fixes name="Set the refresh rate to minimum value">
+          <initialOperation>
+            <firstModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="aql: 0.5"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="Number of sensors &lt;= 10 with camera" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate of this subsystem should be 1.0'" targetClass="sensorProject::VisionSystem">
+        <audits auditExpression="aql: ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() > 3) and (self.eContainer().eAllContents()->filter(sensorProject::VisionSystem)->size() > 0) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt; 11)) implies self.refresh_rate >=1.0"/>
+        <fixes name="Set the refresh rate to minimum value">
+          <initialOperation>
+            <firstModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="aql: 1.0"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="Number of sensors &lt;= 15 with  camera" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate of this subsystem should be 2.0'" targetClass="sensorProject::VisionSystem">
+        <audits auditExpression="aql: ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() > 10) and (self.eContainer().eAllContents()->filter(sensorProject::VisionSystem)->size() > 0) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt; 16)) implies self.refresh_rate >=2.0"/>
+        <fixes name="Set the refresh rate to minimum value">
+          <initialOperation>
+            <firstModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="aql: 2.0"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="Number of sensors &lt;= 20 with camera" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate of this subsystem should be 3.0'" targetClass="sensorProject::VisionSystem">
+        <audits auditExpression="aql: ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() > 15) and (self.eContainer().eAllContents()->filter(sensorProject::VisionSystem)->size() > 0) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt; 21)) implies self.refresh_rate >=3.0"/>
+        <fixes name="Set the refresh rate to minimum value">
+          <initialOperation>
+            <firstModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="aql: 3.0"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="Number of sensors &lt;= 25 with camera" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate of this subsystem should be 4.0'" targetClass="sensorProject::VisionSystem">
+        <audits auditExpression="aql: ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() > 20) and(self.eContainer().eAllContents()->filter(sensorProject::VisionSystem)->size() > 0) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt; 26)) implies self.refresh_rate >=4.0"/>
+        <fixes name="Set the refresh rate to minimum value">
+          <initialOperation>
+            <firstModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="aql: 4.0"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="Number of sensors &lt;= 40 with camera" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate of this subsystem should be 5.0'" targetClass="sensorProject::VisionSystem">
+        <audits auditExpression="aql: ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() > 25) and (self.eContainer().eAllContents()->filter(sensorProject::VisionSystem)->size() > 0) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt; 41)) implies self.refresh_rate >=5.0"/>
+        <fixes name="Set the refresh rate to minimum value">
+          <initialOperation>
+            <firstModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="aql: 5.0"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="Number of sensors &lt;= 50 with camera" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate of this subsystem should be 8.0'" targetClass="sensorProject::VisionSystem">
+        <audits auditExpression="aql: ((self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() > 40) and(self.eContainer().eAllContents()->filter(sensorProject::VisionSystem)->size() > 0) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() &lt; 51)) implies self.refresh_rate >=8.0"/>
+        <fixes name="Set the refresh rate to minimum value">
+          <initialOperation>
+            <firstModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="aql: 8.0"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+      <ownedRules xsi:type="validation:SemanticValidationRule" name="Number of sensors > 50 with camera" level="WARNING" message="aql: self.category.toString().toLower().toUpperFirst() + '  Subsystem:  Due to the number of the selected sensors, we suggest the minimum refresh rate of this subsystem should be 10.0'" targetClass="sensorProject::VisionSystem">
+        <audits auditExpression="aql: ((self.eContainer().eAllContents()->filter(sensorProject::VisionSystem)->size() > 0) and (self.eContainer().eAllContents()->filter(sensorProject::Sensor)->size() > 50)) implies self.refresh_rate >=10.0"/>
+        <fixes name="Set the refresh rate to minimum value">
+          <initialOperation>
+            <firstModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="aql: 10.0"/>
+          </initialOperation>
+        </fixes>
+      </ownedRules>
+    </validationSet>
+    <ownedRepresentations xsi:type="description_1:DiagramDescription" name="DevelopSystem" initialisation="true" domainClass="sensorProject::SensorSystem" enablePopupBars="true">
+      <metamodel href="platform:/plugin/SensorProject/model/sensorProject.ecore#/"/>
+      <defaultLayer name="SensorSystem">
+        <nodeMappings name="DistanceSensor" semanticCandidatesExpression="feature:hasSensor" doubleClickDescription="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@toolSections.1/@ownedTools[name='Renaming%20Sonar']" domainClass="sensorProject::DistanceSensor">
+          <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql: self.type " sizeComputationExpression="8" workspacePath="/SensorProject.design/icons/SENSORS/SONAR.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="AcousticSensor" semanticCandidatesExpression="feature:hasSensor" doubleClickDescription="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@toolSections.1/@ownedTools[name='Renaming%20Acoustic']" domainClass="sensorProject::AcousticSensor">
+          <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql: self.type " sizeComputationExpression="7" workspacePath="/SensorProject.design/icons/SENSORS/MICROPHONE.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="SpeedSensor" semanticCandidatesExpression="feature:hasSensor" domainClass="sensorProject::SpeedSensor">
+          <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="" sizeComputationExpression="8" workspacePath="/SensorProject.design/icons/SENSORS/accelerometer.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="PositionSensor Head" semanticCandidatesExpression="feature:hasSensor" doubleClickDescription="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@toolSections.1/@ownedTools[name='Renaming%20Position']" domainClass="sensorProject::PositionSensorHead">
+          <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql: self.type " sizeComputationExpression="8" workspacePath="/SensorProject.design/icons/SENSORS/POSITION HEAD.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="PositionSensor Hand" semanticCandidatesExpression="feature:hasSensor" doubleClickDescription="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@toolSections.1/@ownedTools[name='Renaming%20Position']" domainClass="sensorProject::PositionSensorHand">
+          <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql: self.type " sizeComputationExpression="8" workspacePath="/SensorProject.design/icons/SENSORS/POSITION HAND.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="PositionSensor Foot" semanticCandidatesExpression="feature:hasSensor" doubleClickDescription="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@toolSections.1/@ownedTools[name='Renaming%20Position']" domainClass="sensorProject::PositionSensorFoot">
+          <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql: self.type " sizeComputationExpression="8" workspacePath="/SensorProject.design/icons/SENSORS/POSITION FOOT.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="PositionSensor Robot" semanticCandidatesExpression="feature:hasSensor" doubleClickDescription="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@toolSections.1/@ownedTools[name='Renaming%20Position']" domainClass="sensorProject::PositionSensorRobot">
+          <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="" sizeComputationExpression="8" workspacePath="/SensorProject.design/icons/SENSORS/localization2.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="VisionSensor" semanticCandidatesExpression="feature:hasSensor" doubleClickDescription="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@toolSections.1/@ownedTools[name='Renaming%20Camera']" domainClass="sensorProject::VisionSensor">
+          <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql: self.type " sizeComputationExpression="8" workspacePath="/SensorProject.design/icons/SENSORS/CAMERA.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="ElectricSensor" semanticCandidatesExpression="feature:hasSensor" domainClass="sensorProject::ElectricSensor">
+          <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="" sizeComputationExpression="8" workspacePath="/SensorProject.design/icons/SENSORS/battery-sensor.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="TframeSensor" semanticCandidatesExpression="feature:hasSensor" doubleClickDescription="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@toolSections.1/@ownedTools[name='Renaming%20Tframe']" domainClass="sensorProject::TframeSensor">
+          <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql: self.origin + ' \n ->  ' + self.target" sizeComputationExpression="8" workspacePath="/SensorProject.design/icons/SENSORS/tframe.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="PostureSensor" semanticCandidatesExpression="feature:hasSensor" domainClass="sensorProject::PostureSensor">
+          <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="" sizeComputationExpression="8" workspacePath="/SensorProject.design/icons/SENSORS/POSTURE2.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="PressureSensor Head" semanticCandidatesExpression="feature:hasSensor" doubleClickDescription="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@toolSections.1/@ownedTools[name='Renaming%20Pressure']" domainClass="sensorProject::PressureSensorHead">
+          <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql: self.type " sizeComputationExpression="8" workspacePath="/SensorProject.design/icons/SENSORS/pressure_head.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="PressureSensor Hand" semanticCandidatesExpression="feature:hasSensor" doubleClickDescription="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@toolSections.1/@ownedTools[name='Renaming%20Pressure']" domainClass="sensorProject::PressureSensorHand">
+          <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql: self.type " sizeComputationExpression="8" workspacePath="/SensorProject.design/icons/SENSORS/pressure-hand.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="PressureSensor Foot" semanticCandidatesExpression="feature:hasSensor" doubleClickDescription="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@toolSections.1/@ownedTools[name='Renaming%20Pressure']" domainClass="sensorProject::PressureSensorFoot">
+          <style xsi:type="style:WorkspaceImageDescription" showIcon="false" labelExpression="aql: self.type " sizeComputationExpression="8" workspacePath="/SensorProject.design/icons/SENSORS/pressure-foot.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+          </style>
+        </nodeMappings>
+        <nodeMappings name="Sensor system" domainClass="sensorProject::SensorSystem">
+          <style xsi:type="style:SquareDescription" tooltipExpression="aql: 'Name: ' + self.name + ' | Duration: ' + self.duration" labelPosition="node" resizeKind="NSEW">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <color xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='gray']"/>
+          </style>
+        </nodeMappings>
+        <containerMappings name="Distance Sub System" semanticCandidatesExpression="feature:hasSubsystem" domainClass="sensorProject::DistanceSystem" reusedNodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='DistanceSensor']">
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="feature:description" iconPath="/SensorProject.design/icons/SUBSYSTEMS/distance-Webp.net-resizeimage.png" widthComputationExpression="25" heightComputationExpression="30">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <labelBorderStyle href="environment:/viewpoint#//@labelBorderStyles/@labelBorderStyleDescriptions.1"/>
+          </style>
+        </containerMappings>
+        <containerMappings name="Acoustic Sub System" semanticCandidatesExpression="feature:hasSubsystem" domainClass="sensorProject::AcousticSystem" reusedNodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='AcousticSensor']">
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="feature:description" iconPath="/SensorProject.design/icons/SUBSYSTEMS/acoustic-Webp.net-resizeimage.png" widthComputationExpression="30" heightComputationExpression="30">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <labelBorderStyle href="environment:/viewpoint#//@labelBorderStyles/@labelBorderStyleDescriptions.1"/>
+          </style>
+        </containerMappings>
+        <containerMappings name="Vision Sub System" semanticCandidatesExpression="feature:hasSubsystem" domainClass="sensorProject::VisionSystem" reusedNodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='VisionSensor']">
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="feature:description" iconPath="/SensorProject.design/icons/SUBSYSTEMS/camera-Webp.net-resizeimage.png" widthComputationExpression="25" heightComputationExpression="30">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <labelBorderStyle href="environment:/viewpoint#//@labelBorderStyles/@labelBorderStyleDescriptions.1"/>
+          </style>
+        </containerMappings>
+        <containerMappings name="Position Sub System" semanticCandidatesExpression="feature:hasSubsystem" domainClass="sensorProject::PositionSystem" reusedNodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PositionSensor%20Head'] //@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PositionSensor%20Hand'] //@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PositionSensor%20Foot'] //@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PositionSensor%20Robot'] //@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PostureSensor'] //@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='TframeSensor']">
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="feature:description" iconPath="/SensorProject.design/icons/SUBSYSTEMS/position-Webp.net-resizeimage.png" widthComputationExpression="30" heightComputationExpression="30">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <labelBorderStyle href="environment:/viewpoint#//@labelBorderStyles/@labelBorderStyleDescriptions.1"/>
+          </style>
+        </containerMappings>
+        <containerMappings name="Pressure Sub System" semanticCandidatesExpression="feature:hasSubsystem" domainClass="sensorProject::PressureSystem" reusedNodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PressureSensor%20Head'] //@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PressureSensor%20Foot'] //@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PressureSensor%20Hand']">
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="feature:description" iconPath="/SensorProject.design/icons/SUBSYSTEMS/pressure-Webp.net-resizeimage.png">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <labelBorderStyle href="environment:/viewpoint#//@labelBorderStyles/@labelBorderStyleDescriptions.1"/>
+          </style>
+        </containerMappings>
+        <containerMappings name="Speed Sub System" semanticCandidatesExpression="feature:hasSubsystem" domainClass="sensorProject::SpeedSystem" reusedNodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='SpeedSensor']">
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="feature:description" iconPath="/SensorProject.design/icons/SUBSYSTEMS/speed-Webp.net-resizeimage.png" widthComputationExpression="20" heightComputationExpression="30">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <labelBorderStyle href="environment:/viewpoint#//@labelBorderStyles/@labelBorderStyleDescriptions.1"/>
+          </style>
+        </containerMappings>
+        <containerMappings name="Electric Sub System" semanticCandidatesExpression="feature:hasSubsystem" domainClass="sensorProject::ElectricSystem" reusedNodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='ElectricSensor']">
+          <style xsi:type="style:FlatContainerStyleDescription" borderSizeComputationExpression="1" labelExpression="feature:description" iconPath="/SensorProject.design/icons/SUBSYSTEMS/electric-Webp.net-resizeimage.png" widthComputationExpression="20" heightComputationExpression="30">
+            <borderColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <labelColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='black']"/>
+            <backgroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <foregroundColor xsi:type="description:SystemColor" href="environment:/viewpoint#//@systemColors/@entries[name='white']"/>
+            <labelBorderStyle href="environment:/viewpoint#//@labelBorderStyles/@labelBorderStyleDescriptions.1"/>
+          </style>
+        </containerMappings>
+        <toolSections name="Sub Sensor System Toolbar">
+          <ownedTools xsi:type="tool_1:ContainerCreationDescription" name="Acoustic Sensor System" containerMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@containerMappings[name='Acoustic%20Sub%20System']" iconPath="/SensorProject.design/icons/SUBSYSTEMS/ACOUSTIC-toolbar.png">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSubsystem->select(t | t.oclIsTypeOf(sensorProject::AcousticSystem))->size()&lt;4">
+                  <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::AcousticSystem" referenceName="hasSubsystem">
+                    <subModelOperations xsi:type="tool:SetValue" featureName="description" valueExpression="aql: 'AudioSystem'"/>
+                    <subModelOperations xsi:type="tool:SetValue" featureName="category" valueExpression="aql: sensorProject::Category::ACOUSTIC"/>
+                    <subModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="0.0"/>
+                    <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::AcousticSensor" referenceName="hasSensor"/>
+                  </subModelOperations>
+                </subModelOperations>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:ContainerCreationDescription" name="Distance Sensor System" containerMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@containerMappings[name='Distance%20Sub%20System']" iconPath="/SensorProject.design/icons/SUBSYSTEMS/distance2-toolbar.png">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSubsystem->select(t | t.oclIsTypeOf(sensorProject::DistanceSystem))->size()&lt; 2">
+                  <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::DistanceSystem" referenceName="hasSubsystem">
+                    <subModelOperations xsi:type="tool:SetValue" featureName="description" valueExpression="aql: 'Distance Sensor Sub System'"/>
+                    <subModelOperations xsi:type="tool:SetValue" featureName="category" valueExpression="aql: sensorProject::Category::DISTANCE"/>
+                    <subModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="0.2"/>
+                    <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::DistanceSensor" referenceName="hasSensor">
+                      <subModelOperations xsi:type="tool:SetValue" featureName="minDistanceAccepted" valueExpression="aql: 0.23"/>
+                      <subModelOperations xsi:type="tool:SetValue" featureName="maxDistanceAccepted" valueExpression="aql: 1.8"/>
+                    </subModelOperations>
+                  </subModelOperations>
+                </subModelOperations>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:ContainerCreationDescription" name="Electric Sensor System" forceRefresh="true" containerMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@containerMappings[name='Electric%20Sub%20System']" iconPath="/SensorProject.design/icons/SUBSYSTEMS/battery-toolbar.png">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSubsystem->select(t | t.oclIsTypeOf(sensorProject::ElectricSystem))->size()&lt; 1">
+                  <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::ElectricSystem" referenceName="hasSubsystem">
+                    <subModelOperations xsi:type="tool:SetValue" featureName="description" valueExpression="aql: 'Electric Sensor Sub System'"/>
+                    <subModelOperations xsi:type="tool:SetValue" featureName="category" valueExpression="aql: sensorProject::Category::ELECTRIC"/>
+                    <subModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="0.2"/>
+                    <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::ElectricSensor" referenceName="hasSensor">
+                      <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql: 'Battery'"/>
+                      <subModelOperations xsi:type="tool:SetValue" featureName="alarmValue" valueExpression="30.0"/>
+                      <subModelOperations xsi:type="tool:SetValue" featureName="notifications" valueExpression="aql: true"/>
+                    </subModelOperations>
+                  </subModelOperations>
+                </subModelOperations>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:ContainerCreationDescription" name="Position Sensor System" containerMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@containerMappings[name='Position%20Sub%20System']" iconPath="/SensorProject.design/icons/SUBSYSTEMS/POSITION-toolbar.png">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::PositionSystem" referenceName="hasSubsystem">
+                  <subModelOperations xsi:type="tool:SetValue" featureName="description" valueExpression="aql: 'Position Sensor Sub System'"/>
+                  <subModelOperations xsi:type="tool:SetValue" featureName="category" valueExpression="aql: sensorProject::Category::POSITION"/>
+                  <subModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="0.2"/>
+                </subModelOperations>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:ContainerCreationDescription" name="Pressure Sensor System" containerMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@containerMappings[name='Pressure%20Sub%20System']" iconPath="/SensorProject.design/icons/SUBSYSTEMS/pressure-toolbar.png">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSubsystem->select(t | t.oclIsTypeOf(sensorProject::PressureSystem))->size()&lt; 13">
+                  <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::PressureSystem" referenceName="hasSubsystem">
+                    <subModelOperations xsi:type="tool:SetValue" featureName="description" valueExpression="aql: 'Pressure Sensor Sub System'"/>
+                    <subModelOperations xsi:type="tool:SetValue" featureName="category" valueExpression="aql: sensorProject::Category::PRESSURE"/>
+                    <subModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="0.2"/>
+                  </subModelOperations>
+                </subModelOperations>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:ContainerCreationDescription" name="Speed Sensor System" containerMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@containerMappings[name='Speed%20Sub%20System']" iconPath="/SensorProject.design/icons/SUBSYSTEMS/speed-toolbar.png">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSubsystem->select(t | t.oclIsTypeOf(sensorProject::SpeedSystem))->size()&lt; 1">
+                  <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::SpeedSystem" referenceName="hasSubsystem">
+                    <subModelOperations xsi:type="tool:SetValue" featureName="description" valueExpression="aql: 'Speed Sensor Sub System'"/>
+                    <subModelOperations xsi:type="tool:SetValue" featureName="category" valueExpression="aql: sensorProject::Category::SPEED"/>
+                    <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::SpeedSensor" referenceName="hasSensor">
+                      <subModelOperations xsi:type="tool:For" expression="aql: self.ancestors()->filter(sensorProject::SensorSystem).eAllContents()->filter(sensorProject::Sensor).id" iteratorName="indexId">
+                        <subModelOperations xsi:type="tool:Let" variableName="maxId" valueExpression="aql: self.id.max(indexId)">
+                          <subModelOperations xsi:type="tool:SetValue" featureName="id" valueExpression="aql: maxId"/>
+                        </subModelOperations>
+                      </subModelOperations>
+                      <subModelOperations xsi:type="tool:SetValue" featureName="id" valueExpression="aql: self.id +1"/>
+                      <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql: 'Accelerometer'"/>
+                    </subModelOperations>
+                    <subModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="0.2"/>
+                  </subModelOperations>
+                </subModelOperations>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:ContainerCreationDescription" name="Vision Sensor System" containerMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@containerMappings[name='Vision%20Sub%20System']" iconPath="/SensorProject.design/icons/SUBSYSTEMS/camera-toolbar.png">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSubsystem->select(t | t.oclIsTypeOf(sensorProject::VisionSystem))->size()&lt; 2">
+                  <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::VisionSystem" referenceName="hasSubsystem">
+                    <subModelOperations xsi:type="tool:SetValue" featureName="description" valueExpression="aql: 'Vision Sensor Sub System'"/>
+                    <subModelOperations xsi:type="tool:SetValue" featureName="category" valueExpression="aql: sensorProject::Category::VISION"/>
+                    <subModelOperations xsi:type="tool:SetValue" featureName="refresh_rate" valueExpression="0.5"/>
+                    <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::VisionSensor" referenceName="hasSensor">
+                      <subModelOperations xsi:type="tool:SetValue" featureName="resolution" valueExpression="aql: 'PX640x480'"/>
+                    </subModelOperations>
+                  </subModelOperations>
+                </subModelOperations>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+        </toolSections>
+        <toolSections name="Sensor Toolbar">
+          <ownedTools xsi:type="tool_1:NodeCreationDescription" name="Acoustic Sensor: Microphone" forceRefresh="true" nodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='AcousticSensor']" iconPath="/SensorProject.design/icons/SENSORS/MICROPHONE-toolbar.png">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::AcousticSensor))->size()&lt;4 ">
+                  <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::AcousticSensor" referenceName="hasSensor"/>
+                </subModelOperations>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:NodeCreationDescription" name="Distance Sensor: Sonar" forceRefresh="true" nodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='DistanceSensor']" iconPath="/SensorProject.design/icons/SENSORS/SONAR-toolbar.png">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::DistanceSensor))->size()&lt; 2">
+                  <subModelOperations xsi:type="tool:If" conditionExpression="aql:container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::DistanceSensor))->size() = 1 ">
+                    <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->first().type.toString() = 'LEFT'">
+                      <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::DistanceSensor" referenceName="hasSensor">
+                        <subModelOperations xsi:type="tool:SetValue" featureName="type" valueExpression="aql: 'RIGHT'"/>
+                        <subModelOperations xsi:type="tool:SetValue" featureName="minDistanceAccepted" valueExpression="aql: 0.23"/>
+                        <subModelOperations xsi:type="tool:SetValue" featureName="maxDistanceAccepted" valueExpression="aql: 1.8"/>
+                      </subModelOperations>
+                    </subModelOperations>
+                    <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->first().type.toString() = 'RIGHT'">
+                      <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::DistanceSensor" referenceName="hasSensor">
+                        <subModelOperations xsi:type="tool:SetValue" featureName="type" valueExpression="aql: 'LEFT'"/>
+                        <subModelOperations xsi:type="tool:SetValue" featureName="minDistanceAccepted" valueExpression="aql: 0.23"/>
+                        <subModelOperations xsi:type="tool:SetValue" featureName="maxDistanceAccepted" valueExpression="aql: 1.8"/>
+                      </subModelOperations>
+                    </subModelOperations>
+                  </subModelOperations>
+                  <subModelOperations xsi:type="tool:If" conditionExpression="aql:container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::DistanceSensor))->size() = 0">
+                    <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::DistanceSensor" referenceName="hasSensor">
+                      <subModelOperations xsi:type="tool:SetValue" featureName="minDistanceAccepted" valueExpression="aql: 0.23"/>
+                      <subModelOperations xsi:type="tool:SetValue" featureName="maxDistanceAccepted" valueExpression="aql: 1.8"/>
+                    </subModelOperations>
+                  </subModelOperations>
+                </subModelOperations>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:NodeCreationDescription" name="Electric Sensor: Battery" forceRefresh="true" nodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='ElectricSensor']" iconPath="/SensorProject.design/icons/SENSORS/battery-sensor-toolbar.png">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::ElectricSensor))->size()&lt; 1">
+                  <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::ElectricSensor" referenceName="hasSensor">
+                    <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql: 'Battery'"/>
+                    <subModelOperations xsi:type="tool:SetValue" featureName="alarmValue" valueExpression="30.0"/>
+                    <subModelOperations xsi:type="tool:SetValue" featureName="notifications" valueExpression="aql: true"/>
+                  </subModelOperations>
+                </subModelOperations>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:NodeCreationDescription" name="Speed Sensor: Accelerometer" forceRefresh="true" nodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='SpeedSensor']" iconPath="/SensorProject.design/icons/SENSORS/accelerometer-toolbar.png">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::SpeedSensor))->size()&lt; 1">
+                  <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::SpeedSensor" referenceName="hasSensor">
+                    <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql: 'Accelerometer'"/>
+                  </subModelOperations>
+                </subModelOperations>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:NodeCreationDescription" name="Vision Sensor: RGB Camera" forceRefresh="true" nodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='VisionSensor']" iconPath="/SensorProject.design/icons/SENSORS/CAMERA-toolbar.png">
+            <variable name="container"/>
+            <viewVariable name="containerView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::VisionSensor))->size()&lt; 2">
+                  <subModelOperations xsi:type="tool:If" conditionExpression="aql:container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::VisionSensor))->size() = 1 ">
+                    <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->first().type.toString() = 'TOP'">
+                      <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::VisionSensor" referenceName="hasSensor">
+                        <subModelOperations xsi:type="tool:SetValue" featureName="type" valueExpression="aql: 'BOTTOM'"/>
+                        <subModelOperations xsi:type="tool:SetValue" featureName="resolution" valueExpression="aql: 'PX640x480'"/>
+                      </subModelOperations>
+                    </subModelOperations>
+                    <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->first().type.toString() = 'BOTTOM'">
+                      <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::VisionSensor" referenceName="hasSensor">
+                        <subModelOperations xsi:type="tool:SetValue" featureName="type" valueExpression="aql: 'TOP'"/>
+                        <subModelOperations xsi:type="tool:SetValue" featureName="resolution" valueExpression="aql: 'PX640x480'"/>
+                      </subModelOperations>
+                    </subModelOperations>
+                  </subModelOperations>
+                  <subModelOperations xsi:type="tool:If" conditionExpression="aql:container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::VisionSensor))->size() = 0">
+                    <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::VisionSensor" referenceName="hasSensor">
+                      <subModelOperations xsi:type="tool:SetValue" featureName="resolution" valueExpression="aql: 'PX640x480'"/>
+                    </subModelOperations>
+                  </subModelOperations>
+                </subModelOperations>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:ToolGroup" name="Pressure Sensor Toolbar">
+            <tools xsi:type="tool_1:NodeCreationDescription" name="Pressure Sensor: Head" forceRefresh="true" nodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PressureSensor%20Head']" iconPath="/SensorProject.design/icons/SENSORS/pressure_head-toolbar.png">
+              <variable name="container"/>
+              <viewVariable name="containerView"/>
+              <initialOperation>
+                <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                  <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::PressureSensorHead))->size()&lt; 3">
+                    <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::PressureSensorHead" referenceName="hasSensor"/>
+                  </subModelOperations>
+                </firstModelOperations>
+              </initialOperation>
+            </tools>
+            <tools xsi:type="tool_1:NodeCreationDescription" name="Pressure Sensor: Hand" forceRefresh="true" nodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PressureSensor%20Hand']" iconPath="/SensorProject.design/icons/SENSORS/pressure-hand-toolbar.png">
+              <variable name="container"/>
+              <viewVariable name="containerView"/>
+              <initialOperation>
+                <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                  <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::PressureSensorHand))->size()&lt; 6">
+                    <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::PressureSensorHand" referenceName="hasSensor"/>
+                  </subModelOperations>
+                </firstModelOperations>
+              </initialOperation>
+            </tools>
+            <tools xsi:type="tool_1:NodeCreationDescription" name="Pressure Sensor: Foot" forceRefresh="true" nodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PressureSensor%20Foot']" iconPath="/SensorProject.design/icons/SENSORS/pressure-foot-toolbar.png">
+              <variable name="container"/>
+              <viewVariable name="containerView"/>
+              <initialOperation>
+                <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                  <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::PressureSensorFoot))->size()&lt; 4">
+                    <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::PressureSensorFoot" referenceName="hasSensor"/>
+                  </subModelOperations>
+                </firstModelOperations>
+              </initialOperation>
+            </tools>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:ToolGroup" name="Position Sensor Toolbar">
+            <tools xsi:type="tool_1:NodeCreationDescription" name="Position Sensor: Posture" forceRefresh="true" nodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PostureSensor']" iconPath="/SensorProject.design/icons/SENSORS/POSTURE2-toolbar.png">
+              <variable name="container"/>
+              <viewVariable name="containerView"/>
+              <initialOperation>
+                <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                  <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::PostureSensor))->size()&lt; 1">
+                    <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::PostureSensor" referenceName="hasSensor">
+                      <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql: 'Robot_Posture'"/>
+                    </subModelOperations>
+                  </subModelOperations>
+                </firstModelOperations>
+              </initialOperation>
+            </tools>
+            <tools xsi:type="tool_1:NodeCreationDescription" name="Position Sensor: Head" forceRefresh="true" nodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PositionSensor%20Head']" iconPath="/SensorProject.design/icons/SENSORS/POSITION HEAD-toolbar.png">
+              <variable name="container"/>
+              <viewVariable name="containerView"/>
+              <initialOperation>
+                <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                  <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::PositionSensorHead))->size() &lt; 2">
+                    <subModelOperations xsi:type="tool:If" conditionExpression="aql:container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::PositionSensorHead))->size() = 1 ">
+                      <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::PositionSensorHead))->first().type.toString() = 'HEADPITCH'">
+                        <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::PositionSensorHead" referenceName="hasSensor">
+                          <subModelOperations xsi:type="tool:SetValue" featureName="type" valueExpression="aql: 'HEADYAW'"/>
+                        </subModelOperations>
+                      </subModelOperations>
+                      <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::PositionSensorHead))->first().type.toString() = 'HEADYAW'">
+                        <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::PositionSensorHead" referenceName="hasSensor">
+                          <subModelOperations xsi:type="tool:SetValue" featureName="type" valueExpression="aql: 'HEADPITCH'"/>
+                        </subModelOperations>
+                      </subModelOperations>
+                    </subModelOperations>
+                    <subModelOperations xsi:type="tool:If" conditionExpression="aql:container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::PositionSensorHead))->size() = 0 ">
+                      <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::PositionSensorHead" referenceName="hasSensor"/>
+                    </subModelOperations>
+                  </subModelOperations>
+                </firstModelOperations>
+              </initialOperation>
+            </tools>
+            <tools xsi:type="tool_1:NodeCreationDescription" name="Position Sensor: Hand" forceRefresh="true" nodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PositionSensor%20Hand']" iconPath="/SensorProject.design/icons/SENSORS/POSITION HAND-toolbar.png">
+              <variable name="container"/>
+              <viewVariable name="containerView"/>
+              <initialOperation>
+                <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                  <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::PositionSensorHand))->size()&lt; 10">
+                    <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::PositionSensorHand" referenceName="hasSensor"/>
+                  </subModelOperations>
+                </firstModelOperations>
+              </initialOperation>
+            </tools>
+            <tools xsi:type="tool_1:NodeCreationDescription" name="Position Sensor: Foot" forceRefresh="true" nodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PositionSensor%20Foot']" iconPath="/SensorProject.design/icons/SENSORS/POSITION FOOT-toolbar.png">
+              <variable name="container"/>
+              <viewVariable name="containerView"/>
+              <initialOperation>
+                <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                  <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::PositionSensorFoot))->size()&lt; 12">
+                    <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::PositionSensorFoot" referenceName="hasSensor"/>
+                  </subModelOperations>
+                </firstModelOperations>
+              </initialOperation>
+            </tools>
+            <tools xsi:type="tool_1:NodeCreationDescription" name="Position Sensor: Localization" forceRefresh="true" nodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PositionSensor%20Robot']" iconPath="/SensorProject.design/icons/SENSORS/localization2-toolbar.png">
+              <variable name="container"/>
+              <viewVariable name="containerView"/>
+              <initialOperation>
+                <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                  <subModelOperations xsi:type="tool:If" conditionExpression="aql: container.hasSensor->select(t | t.oclIsTypeOf(sensorProject::PositionSensorRobot))->size()&lt; 1">
+                    <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::PositionSensorRobot" referenceName="hasSensor">
+                      <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql: 'Localization'"/>
+                    </subModelOperations>
+                  </subModelOperations>
+                </firstModelOperations>
+              </initialOperation>
+            </tools>
+            <tools xsi:type="tool_1:NodeCreationDescription" name="Position Sensor: Tframe" forceRefresh="true" nodeMappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='TframeSensor']" iconPath="/SensorProject.design/icons/SENSORS/tframe-toolbar.png">
+              <variable name="container"/>
+              <viewVariable name="containerView"/>
+              <initialOperation>
+                <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="var: container">
+                  <subModelOperations xsi:type="tool:CreateInstance" typeName="sensorProject::TframeSensor" referenceName="hasSensor">
+                    <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql: 'Tframe_'"/>
+                  </subModelOperations>
+                </firstModelOperations>
+              </initialOperation>
+            </tools>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:DoubleClickDescription" name="Renaming Sonar" forceRefresh="true" mappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='DistanceSensor']">
+            <element name="element"/>
+            <elementView name="elementView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="aql: element">
+                <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql: 'Sonar_' + self.type.toString().toLower().toUpperFirst()"/>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:DoubleClickDescription" name="Renaming Tframe" mappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='TframeSensor']">
+            <element name="element"/>
+            <elementView name="elementView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="aql: element">
+                <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql: self.origin.toString().toLower().toUpperFirst() + '_'+ self.target.toString().toLower().toUpperFirst()"/>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:DoubleClickDescription" name="Renaming Position" mappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PositionSensor%20Head'] //@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PositionSensor%20Foot'] //@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PositionSensor%20Hand'] //@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PositionSensor%20Robot']">
+            <element name="element"/>
+            <elementView name="elementView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="aql: element">
+                <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql: 'Joint_' + self.type.toString().toLower().toUpperFirst()"/>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:DoubleClickDescription" name="Renaming Pressure" mappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PressureSensor%20Foot'] //@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PressureSensor%20Hand'] //@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='PressureSensor%20Head']">
+            <element name="element"/>
+            <elementView name="elementView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="aql: element">
+                <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql: 'Touch_' + self.type.toString().toLower().toUpperFirst()"/>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:DoubleClickDescription" name="Renaming Acoustic" mappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='AcousticSensor']">
+            <element name="element"/>
+            <elementView name="elementView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="aql: element">
+                <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql: 'mic_' + self.type.toString().toLower().substring(4)"/>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+          <ownedTools xsi:type="tool_1:DoubleClickDescription" name="Renaming Camera" forceRefresh="true" mappings="//@ownedViewpoints[name='sensors']/@ownedRepresentations[name='DevelopSystem']/@defaultLayer/@nodeMappings[name='VisionSensor']">
+            <element name="element"/>
+            <elementView name="elementView"/>
+            <initialOperation>
+              <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="aql: element">
+                <subModelOperations xsi:type="tool:SetValue" featureName="name" valueExpression="aql: 'Camera_' + self.type.toString().toLower().toUpperFirst()"/>
+              </firstModelOperations>
+            </initialOperation>
+          </ownedTools>
+        </toolSections>
+      </defaultLayer>
+    </ownedRepresentations>
+    <ownedJavaExtensions qualifiedClassName="SensorProject.design.Services"/>
+  </ownedViewpoints>
+  <extensions xsi:type="properties:ViewExtensionDescription" name="sirius_default_rules_properties">
+    <metamodels href="platform:/plugin/SensorProject/model/sensorProject.ecore#/"/>
+    <categories name="Default">
+      <pages name="sirius_default_rules_defaultpage" labelExpression="aql:input.emfEditServices(self).getTabName()" semanticCandidateExpression="aql:input.getAllSemanticElements()" groups="//@extensions.0/@categories.0/@groups.0"/>
+      <groups name="sirius_default_rules_defaultgroup" labelExpression="Properties" semanticCandidateExpression="var:self" preconditionExpression="">
+        <controls xsi:type="properties:DynamicMappingForDescription" name="sirius_default_rules_structural_features_for" iterator="eStructuralFeature" iterableExpression="aql:input.emfEditServices(self).getEStructuralFeatures()">
+          <ifs name="sirius_default_rules_mono_string_if" predicateExpression="aql:input.emfEditServices(self).needsTextWidget(eStructuralFeature) and not input.emfEditServices(self).isMultiline(eStructuralFeature)">
+            <widget xsi:type="properties:TextDescription" name="sirius_default_rules_mono_string" labelExpression="aql:input.emfEditServices(self).getText(eStructuralFeature)+':'" helpExpression="aql:input.emfEditServices(self).getDescription(eStructuralFeature)" isEnabledExpression="aql:eStructuralFeature.changeable" valueExpression="aql:self.eGet(eStructuralFeature.name)">
+              <initialOperation>
+                <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="aql:input.emfEditServices(self).setValue(eStructuralFeature, newValue)"/>
+              </initialOperation>
+              <conditionalStyles preconditionExpression="aql:eStructuralFeature.lowerBound==1">
+                <style>
+                  <labelFontFormat>bold</labelFontFormat>
+                </style>
+              </conditionalStyles>
+            </widget>
+          </ifs>
+          <ifs name="sirius_default_rules_multi_string_if" predicateExpression="aql:input.emfEditServices(self).needsTextWidget(eStructuralFeature) and input.emfEditServices(self).isMultiline(eStructuralFeature)">
+            <widget xsi:type="properties:TextAreaDescription" name="sirius_default_rules_multi_string" labelExpression="aql:input.emfEditServices(self).getText(eStructuralFeature)+':'" helpExpression="aql:input.emfEditServices(self).getDescription(eStructuralFeature)" isEnabledExpression="aql:eStructuralFeature.changeable" valueExpression="aql:self.eGet(eStructuralFeature.name)">
+              <initialOperation>
+                <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="aql:input.emfEditServices(self).setValue(eStructuralFeature, newValue)"/>
+              </initialOperation>
+              <conditionalStyles preconditionExpression="aql:eStructuralFeature.lowerBound==1">
+                <style>
+                  <labelFontFormat>bold</labelFontFormat>
+                </style>
+              </conditionalStyles>
+            </widget>
+          </ifs>
+          <ifs name="sirius_default_rules_mono_boolean" predicateExpression="aql:input.emfEditServices(self).needsCheckboxWidget(eStructuralFeature)">
+            <widget xsi:type="properties:CheckboxDescription" name="sirius_default_rules_mono_boolean" labelExpression="aql:input.emfEditServices(self).getText(eStructuralFeature)" helpExpression="aql:input.emfEditServices(self).getDescription(eStructuralFeature)" isEnabledExpression="aql:eStructuralFeature.changeable" valueExpression="aql:self.eGet(eStructuralFeature.name)">
+              <initialOperation>
+                <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="aql:input.emfEditServices(self).setValue(eStructuralFeature, newValue)"/>
+              </initialOperation>
+              <conditionalStyles preconditionExpression="aql:eStructuralFeature.lowerBound==1">
+                <style>
+                  <labelFontFormat>bold</labelFontFormat>
+                </style>
+              </conditionalStyles>
+            </widget>
+          </ifs>
+          <ifs name="sirius_default_rules_enum_if" predicateExpression="aql:eStructuralFeature.eType.oclIsKindOf(ecore::EEnum) and not(eStructuralFeature.many) ">
+            <widget xsi:type="properties:RadioDescription" name="sirius_default_rules_enum" labelExpression="aql:input.emfEditServices(self).getText(eStructuralFeature)+':'" helpExpression="aql:input.emfEditServices(self).getDescription(eStructuralFeature)" isEnabledExpression="aql:eStructuralFeature.changeable" valueExpression="aql:eStructuralFeature.eType.oclAsType(ecore::EEnum).getEEnumLiteralByLiteral(self.eGet(eStructuralFeature.name).toString())" candidatesExpression="aql:eStructuralFeature.eType.oclAsType(ecore::EEnum).eLiterals" candidateDisplayExpression="aql:candidate.name" numberOfColumns="3">
+              <initialOperation>
+                <firstModelOperations xsi:type="tool:ChangeContext" browseExpression="aql:input.emfEditServices(self).setValue(eStructuralFeature, newValue.instance)"/>
+              </initialOperation>
+              <conditionalStyles preconditionExpression="aql:eStructuralFeature.lowerBound==1">
+                <style>
+                  <labelFontFormat>bold</labelFontFormat>
+                </style>
+              </conditionalStyles>
+            </widget>
+          </ifs>
+          <ifs name="sirius_default_rules_eattribute_many_if" predicateExpression="aql:eStructuralFeature.oclIsKindOf(ecore::EAttribute) and eStructuralFeature.many  ">
+            <widget xsi:type="properties:ListDescription" name="sirius_default_rules_eattribute_many" labelExpression="aql:input.emfEditServices(self).getText(eStructuralFeature)+':'" helpExpression="aql:input.emfEditServices(self).getDescription(eStructuralFeature)" isEnabledExpression="aql:eStructuralFeature.changeable" valueExpression="aql:self.eGet(eStructuralFeature.name)" displayExpression="var:value"/>
+          </ifs>
+          <ifs name="sirius_default_rules_ereference_if" predicateExpression="aql:eStructuralFeature.oclIsKindOf(ecore::EReference)">
+            <widget xsi:type="properties-ext-widgets-reference:ExtReferenceDescription" name="sirius_default_rules_ereference" labelExpression="aql:input.emfEditServices(self).getText(eStructuralFeature)+':'" helpExpression="aql:input.emfEditServices(self).getDescription(eStructuralFeature)" referenceNameExpression="aql:eStructuralFeature.name"/>
+          </ifs>
+        </controls>
+      </groups>
+    </categories>
+  </extensions>
+</description:Group>

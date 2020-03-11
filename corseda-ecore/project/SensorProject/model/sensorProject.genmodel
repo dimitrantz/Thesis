@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel"
+    modelDirectory="/SensorProject/src" creationIcons="false" editDirectory="/SensorProject.edit/src-gen"
+    editorDirectory="/SensorProject.editor/src-gen" modelPluginID="SensorProject"
+    modelName="SensorProject" rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container"
+    codeFormatting="true" importerID="org.eclipse.emf.importer.ecore" complianceLevel="8.0"
+    copyrightFields="false" operationReflection="true" importOrganizing="true">
+  <foreignModel>sensorProject.ecore</foreignModel>
+  <testsDirectory xsi:nil="true"/>
+  <genPackages prefix="SensorProject" disposableProviderFactory="true" ecorePackage="sensorProject.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//VisionID">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//VisionID/TOP"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//VisionID/BOTTOM"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//ResolutionID">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//ResolutionID/PX40x30"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//ResolutionID/PX80x60"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//ResolutionID/PX160x120"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//ResolutionID/PX320x240"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//ResolutionID/PX640x480"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//ResolutionID/PX1280x960"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//DistanceID">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//DistanceID/RIGHT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//DistanceID/LEFT"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//PositionID_Robot">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Robot/LOCALIZATION"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//Category">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//Category/DISTANCE"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//Category/ACOUSTIC"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//Category/SPEED"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//Category/PRESSURE"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//Category/POSITION"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//Category/ELECTRIC"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//Category/VISION"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//ElectricID">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//ElectricID/BATTERY"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//SpeedID">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//SpeedID/TORSO"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//PostureID">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PostureID/ROBOT"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//PositionID_Hand">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Hand/LSHOULDERPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Hand/LSHOULDERROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Hand/LELBOWYAW"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Hand/LELBOWROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Hand/LWRISTYAW"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Hand/RSHOULDERPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Hand/RSHOULDERROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Hand/RELBOWYAW"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Hand/RELBOWROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Hand/RWRISTYAW"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//AcousticID">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//AcousticID/MICFRONT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//AcousticID/MICREAR"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//AcousticID/MICLEFT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//AcousticID/MICRIGHT"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//PositionID_Head">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Head/HEADYAW"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Head/HEADPITCH"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//PositionID_Foot">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Foot/LHIPYAWPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Foot/LHIPROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Foot/LHIPPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Foot/LKNEEPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Foot/LANKLEPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Foot/LANKLEROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Foot/RHIPYAWPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Foot/RHIPROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Foot/RHIPPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Foot/RKNEEPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Foot/RANKLEROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PositionID_Foot/RANKLEPITCH"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//TframeOrigins">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/BATTERY"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/ACCELEROMETER"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/CAMERABOTTOM"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/CAMERATOP"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/HEAD_TOUCH_FRONT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/HEAD_TOUCH_MIDDLE"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/HEAD_TOUCH_REAR"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LFOOT_BUMBER_LEFT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LFOOT_BUMBER_RIGHT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/MICFRONT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/MICREAR"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/MICLEFT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/MICRIGHT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RFOOT_BUMBER_LEFT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RFOOT_BUMBER_RIGHT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LHAND_TOUCH_BACK"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LHAND_TOUCH_LEFT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LHAND_TOUCH_RIGHT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RHAND_TOUCH_BACK"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RHAND_TOUCH_LEFT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RHAND_TOUCH_RIGHT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/SONAR_LEFT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/SONAR_RIGHT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/HEADYAW"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/HEADPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LSHOULDERPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LSHOULDERROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LELBOWYAW"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RSHOULDERPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RSHOULDERROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RELBOWYAW"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RELBOWROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RWRISTYAW"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LHIPYAWPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LHIPROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LHIPPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LKNEEPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LANKLEPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RHIPYAWPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RHIPROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RHIPPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RKNEEPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RANKLEROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/RANKLEPITCH"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LANKLEROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LELBOWROLL"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeOrigins/LWRISTYAW"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//TframeTargets">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeTargets/FRAME_ROBOT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeTargets/FRAME_TORSO"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//TframeTargets/FRAME_WORLD"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//PressureID_Head">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PressureID_Head/HEAD_TOUCH_REAR"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PressureID_Head/HEAD_TOUCH_FRONT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PressureID_Head/HEAD_TOUCH_MIDDLE"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//PressureID_Hand">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PressureID_Hand/LHAND_TOUCH_BACK"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PressureID_Hand/LHAND_TOUCH_LEFT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PressureID_Hand/LHAND_TOUCH_RIGHT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PressureID_Hand/RHAND_TOUCH_BACK"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PressureID_Hand/RHAND_TOUCH_LEFT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PressureID_Hand/RHAND_TOUCH_RIGHT"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//PressureID_Foot">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PressureID_Foot/LFOOT_BUMPER_LEFT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PressureID_Foot/LFOOT_BUMPER_RIGHT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PressureID_Foot/RFOOT_BUMPER_LEFT"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//PressureID_Foot/RFOOT_BUMPER_RIGHT"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="sensorProject.ecore#//AcousticTimeID">
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//AcousticTimeID/SECONDS"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//AcousticTimeID/MINUTES"/>
+      <genEnumLiterals ecoreEnumLiteral="sensorProject.ecore#//AcousticTimeID/HOURS"/>
+    </genEnums>
+    <genClasses ecoreClass="sensorProject.ecore#//DistanceSystem"/>
+    <genClasses ecoreClass="sensorProject.ecore#//ElectricSystem"/>
+    <genClasses ecoreClass="sensorProject.ecore#//VisionSystem"/>
+    <genClasses ecoreClass="sensorProject.ecore#//PositionSystem"/>
+    <genClasses ecoreClass="sensorProject.ecore#//SpeedSystem"/>
+    <genClasses ecoreClass="sensorProject.ecore#//PressureSystem"/>
+    <genClasses ecoreClass="sensorProject.ecore#//AcousticSystem">
+      <genFeatures createChild="false" propertyDescription="Enter the duration of the record wanted in seconds. The duration must be lower than the Sensor System's duration "
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//AcousticSystem/recordTime"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensorProject.ecore#//AcousticSystem/timeFormat"/>
+      <genFeatures createChild="false" propertyDescription="Acoustic System by default performs a record only once. However, if you are interested to perform a record function more than once in a specific duration,  then define the refresh rate value."
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//AcousticSystem/measureOnce"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//AcousticSensor">
+      <genFeatures createChild="false" propertyDescription="Choose between the four microphones' position on the robot"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//AcousticSensor/type"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//SubSystem">
+      <genFeatures property="Readonly" createChild="false" propertyDescription="The category of the sub system. That means it can include sensors of the same category only"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//SubSystem/category"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sensorProject.ecore#//SubSystem/hasSensor"/>
+      <genFeatures createChild="false" propertyDescription="Enter a value in seconds for the Refresh Rate of this sub system. All the sensors in this subsystem will implement a measurement every n seconds. "
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//SubSystem/refresh_rate"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensorProject.ecore#//SubSystem/description"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//SensorSystem">
+      <genFeatures createChild="false" propertyDescription="Enter a name for your sensor system"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//SensorSystem/name"/>
+      <genFeatures createChild="false" propertyDescription="Enter a value for the duration of your sensor sytem "
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//SensorSystem/duration"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference sensorProject.ecore#//SensorSystem/hasSubsystem"/>
+      <genFeatures createChild="false" propertyDescription="Choose between seconds, minutes or hours in order to define the unit of the duration entered for your sensor system"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//SensorSystem/timeFormat"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//Sensor">
+      <genFeatures createChild="false" propertyDescription="This name will be used to store the measurements of the specific  sensor in the database. Use a unique name for each sensor"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//Sensor/name"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//ElectricSensor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensorProject.ecore#//ElectricSensor/type"/>
+      <genFeatures createChild="false" propertyDescription="Enter a value between 0.0 and 100.0 in order to get notified if the robot's battery is below this value and check notifications"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//ElectricSensor/alarmValue"/>
+      <genFeatures createChild="false" propertyDescription="When checked, it enables the notifications in the Web Application. If the alarm value is non zero, notifications must be checked"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//ElectricSensor/notifications"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//DistanceSensor">
+      <genFeatures createChild="false" propertyDescription="Enter the max distance wanted to measure in meters. The distance must be between 0.23 and 1.8 meters. This value must be greater or equal to max distance entered"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//DistanceSensor/maxDistanceAccepted"/>
+      <genFeatures createChild="false" propertyDescription="Enter the min distance wanted to measure in meters. The distance must be between 0.23and 1.8 meters. This value must be lower or equal to max distance entered"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//DistanceSensor/minDistanceAccepted"/>
+      <genFeatures createChild="false" propertyDescription="Choose between the two sonar's position on the robot, right or left"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//DistanceSensor/type"/>
+      <genFeatures createChild="false" propertyDescription="Enter a value between MinDistanceAccepted and MaxDistanceAccepted in order to get notified if the robot's distance from an obstacle is lower than this value and check notifications"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//DistanceSensor/alarmValue"/>
+      <genFeatures createChild="false" propertyDescription="When checked, it enables the notifications in the Web Application. If the alarm value is non zero, notifications must be checked"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//DistanceSensor/notifications"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//PressureSensor"/>
+    <genClasses ecoreClass="sensorProject.ecore#//PostureSensor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensorProject.ecore#//PostureSensor/type"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//TframeSensor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensorProject.ecore#//TframeSensor/origin"/>
+      <genFeatures createChild="false" propertyDescription="FRAME_TORSO: this is attached to the robot’s torso reference, so moves with the robot as he walks and changes orientation as he leans. This space is useful when you have very local tasks, that make sense in the orientation of the torso frame. FRAME_ROBOT: this is average of the two feet positions projected around a vertical z axis. This space is useful, because the x axis is always forwards, so provides a natural ego-centric reference. FRAME_WORLD: this is a fixed origin that is never altered. It is left behind when the robot walks, and will be different in z rotation after the robot has turned. This space is useful for calculations which require an external, absolute frame of reference."
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//TframeSensor/target"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//PositionSensor"/>
+    <genClasses ecoreClass="sensorProject.ecore#//VisionSensor">
+      <genFeatures createChild="false" propertyDescription="Choose between the two cameras' position on the robot, top or bottom"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//VisionSensor/type"/>
+      <genFeatures createChild="false" propertyDescription="Enter the resolution wanted for the images in pixels"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//VisionSensor/resolution"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//SpeedSensor">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensorProject.ecore#//SpeedSensor/type"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//PressureSensorHead">
+      <genFeatures createChild="false" propertyDescription="Choose between the head tactiles of the robot"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//PressureSensorHead/type"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//PressureSensorHand">
+      <genFeatures createChild="false" propertyDescription="Choose between the hand tactiles of the robot"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//PressureSensorHand/type"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//PressureSensorFoot">
+      <genFeatures createChild="false" propertyDescription="Choose between the foot bumpers of the robot"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//PressureSensorFoot/type"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//PositionSensorRobot">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute sensorProject.ecore#//PositionSensorRobot/type"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//PositionSensorHead">
+      <genFeatures createChild="false" propertyCategory="" propertyDescription="Choose between the head joint types of the robot"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//PositionSensorHead/type"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//PositionSensorFoot">
+      <genFeatures createChild="false" propertyDescription="Choose between the foot joint types of the robot"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//PositionSensorFoot/type"/>
+    </genClasses>
+    <genClasses ecoreClass="sensorProject.ecore#//PositionSensorHand">
+      <genFeatures createChild="false" propertyDescription="Choose between the hand joint types of the robot"
+          ecoreFeature="ecore:EAttribute sensorProject.ecore#//PositionSensorHand/type"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

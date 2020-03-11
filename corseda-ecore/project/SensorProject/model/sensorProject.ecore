@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="sensorProject" nsURI="platform:/plugin/SensorProject/model/sensorProject.ecore"
+    nsPrefix="sensorProject">
+  <eClassifiers xsi:type="ecore:EClass" name="DistanceSystem" eSuperTypes="#//SubSystem"/>
+  <eClassifiers xsi:type="ecore:EEnum" name="VisionID">
+    <eLiterals name="TOP"/>
+    <eLiterals name="BOTTOM" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ResolutionID">
+    <eLiterals name="PX40x30"/>
+    <eLiterals name="PX80x60" value="1" literal="PX80x60"/>
+    <eLiterals name="PX160x120" value="2"/>
+    <eLiterals name="PX320x240" value="3"/>
+    <eLiterals name="PX640x480" value="4"/>
+    <eLiterals name="PX1280x960" value="5"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="DistanceID">
+    <eLiterals name="RIGHT"/>
+    <eLiterals name="LEFT" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PositionID_Robot">
+    <eLiterals name="LOCALIZATION"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Category">
+    <eLiterals name="DISTANCE"/>
+    <eLiterals name="ACOUSTIC" value="1"/>
+    <eLiterals name="SPEED" value="2"/>
+    <eLiterals name="PRESSURE" value="3"/>
+    <eLiterals name="POSITION" value="4"/>
+    <eLiterals name="ELECTRIC" value="6"/>
+    <eLiterals name="VISION" value="7"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="ElectricID">
+    <eLiterals name="BATTERY"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="SpeedID">
+    <eLiterals name="TORSO"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PostureID">
+    <eLiterals name="ROBOT"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PositionID_Hand">
+    <eLiterals name="LSHOULDERPITCH"/>
+    <eLiterals name="LSHOULDERROLL" value="1"/>
+    <eLiterals name="LELBOWYAW" value="2"/>
+    <eLiterals name="LELBOWROLL" value="3"/>
+    <eLiterals name="LWRISTYAW" value="4"/>
+    <eLiterals name="RSHOULDERPITCH" value="5"/>
+    <eLiterals name="RSHOULDERROLL" value="6"/>
+    <eLiterals name="RELBOWYAW" value="7"/>
+    <eLiterals name="RELBOWROLL" value="8"/>
+    <eLiterals name="RWRISTYAW" value="9"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="AcousticID">
+    <eLiterals name="MICFRONT"/>
+    <eLiterals name="MICREAR" value="1"/>
+    <eLiterals name="MICLEFT" value="2"/>
+    <eLiterals name="MICRIGHT" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PositionID_Head">
+    <eLiterals name="HEADYAW"/>
+    <eLiterals name="HEADPITCH" value="1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PositionID_Foot">
+    <eLiterals name="LHIPYAWPITCH"/>
+    <eLiterals name="LHIPROLL" value="1"/>
+    <eLiterals name="LHIPPITCH" value="2"/>
+    <eLiterals name="LKNEEPITCH" value="3"/>
+    <eLiterals name="LANKLEPITCH" value="4"/>
+    <eLiterals name="LANKLEROLL" value="5"/>
+    <eLiterals name="RHIPYAWPITCH" value="6"/>
+    <eLiterals name="RHIPROLL" value="7"/>
+    <eLiterals name="RHIPPITCH" value="8"/>
+    <eLiterals name="RKNEEPITCH" value="9"/>
+    <eLiterals name="RANKLEROLL" value="10"/>
+    <eLiterals name="RANKLEPITCH" value="11"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TframeOrigins">
+    <eLiterals name="BATTERY"/>
+    <eLiterals name="ACCELEROMETER" value="1"/>
+    <eLiterals name="CAMERABOTTOM" value="2"/>
+    <eLiterals name="CAMERATOP" value="3"/>
+    <eLiterals name="HEAD_TOUCH_FRONT" value="4"/>
+    <eLiterals name="HEAD_TOUCH_MIDDLE" value="5"/>
+    <eLiterals name="HEAD_TOUCH_REAR" value="6"/>
+    <eLiterals name="LFOOT_BUMBER_LEFT" value="7"/>
+    <eLiterals name="LFOOT_BUMBER_RIGHT" value="8"/>
+    <eLiterals name="MICFRONT" value="9"/>
+    <eLiterals name="MICREAR" value="10"/>
+    <eLiterals name="MICLEFT" value="11"/>
+    <eLiterals name="MICRIGHT" value="12"/>
+    <eLiterals name="RFOOT_BUMBER_LEFT" value="13"/>
+    <eLiterals name="RFOOT_BUMBER_RIGHT" value="14"/>
+    <eLiterals name="LHAND_TOUCH_BACK" value="15"/>
+    <eLiterals name="LHAND_TOUCH_LEFT" value="16"/>
+    <eLiterals name="LHAND_TOUCH_RIGHT" value="17"/>
+    <eLiterals name="RHAND_TOUCH_BACK" value="18"/>
+    <eLiterals name="RHAND_TOUCH_LEFT" value="19"/>
+    <eLiterals name="RHAND_TOUCH_RIGHT" value="20"/>
+    <eLiterals name="SONAR_LEFT" value="21"/>
+    <eLiterals name="SONAR_RIGHT" value="22"/>
+    <eLiterals name="HEADYAW" value="23"/>
+    <eLiterals name="HEADPITCH" value="24"/>
+    <eLiterals name="LSHOULDERPITCH" value="25"/>
+    <eLiterals name="LSHOULDERROLL" value="26"/>
+    <eLiterals name="LELBOWYAW" value="27"/>
+    <eLiterals name="RSHOULDERPITCH" value="28"/>
+    <eLiterals name="RSHOULDERROLL" value="29"/>
+    <eLiterals name="RELBOWYAW" value="30"/>
+    <eLiterals name="RELBOWROLL" value="31"/>
+    <eLiterals name="RWRISTYAW" value="32"/>
+    <eLiterals name="LHIPYAWPITCH" value="33"/>
+    <eLiterals name="LHIPROLL" value="34"/>
+    <eLiterals name="LHIPPITCH" value="35"/>
+    <eLiterals name="LKNEEPITCH" value="36"/>
+    <eLiterals name="LANKLEPITCH" value="37"/>
+    <eLiterals name="RHIPYAWPITCH" value="38"/>
+    <eLiterals name="RHIPROLL" value="39"/>
+    <eLiterals name="RHIPPITCH" value="40"/>
+    <eLiterals name="RKNEEPITCH" value="41"/>
+    <eLiterals name="RANKLEROLL" value="42"/>
+    <eLiterals name="RANKLEPITCH" value="43"/>
+    <eLiterals name="LANKLEROLL" value="44"/>
+    <eLiterals name="LELBOWROLL" value="45"/>
+    <eLiterals name="LWRISTYAW" value="46"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="TframeTargets">
+    <eLiterals name="FRAME_ROBOT"/>
+    <eLiterals name="FRAME_TORSO" value="1"/>
+    <eLiterals name="FRAME_WORLD" value="2" literal="FRAME_WORLD"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PressureID_Head">
+    <eLiterals name="HEAD_TOUCH_REAR"/>
+    <eLiterals name="HEAD_TOUCH_FRONT" value="1"/>
+    <eLiterals name="HEAD_TOUCH_MIDDLE" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PressureID_Hand">
+    <eLiterals name="LHAND_TOUCH_BACK"/>
+    <eLiterals name="LHAND_TOUCH_LEFT" value="1"/>
+    <eLiterals name="LHAND_TOUCH_RIGHT" value="2"/>
+    <eLiterals name="RHAND_TOUCH_BACK" value="3"/>
+    <eLiterals name="RHAND_TOUCH_LEFT" value="4"/>
+    <eLiterals name="RHAND_TOUCH_RIGHT" value="5"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="PressureID_Foot">
+    <eLiterals name="LFOOT_BUMPER_LEFT"/>
+    <eLiterals name="LFOOT_BUMPER_RIGHT" value="1"/>
+    <eLiterals name="RFOOT_BUMPER_LEFT" value="2"/>
+    <eLiterals name="RFOOT_BUMPER_RIGHT" value="3"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ElectricSystem" eSuperTypes="#//SubSystem"/>
+  <eClassifiers xsi:type="ecore:EClass" name="VisionSystem" eSuperTypes="#//SubSystem"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PositionSystem" eSuperTypes="#//SubSystem"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SpeedSystem" eSuperTypes="#//SubSystem"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PressureSystem" eSuperTypes="#//SubSystem"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AcousticSystem" eSuperTypes="#//SubSystem">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="recordTime" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeFormat" lowerBound="1"
+        eType="#//AcousticTimeID"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="measureOnce" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AcousticSensor" eSuperTypes="#//Sensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//AcousticID"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SubSystem">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="category" lowerBound="1"
+        eType="#//Category"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hasSensor" lowerBound="1"
+        upperBound="-1" eType="#//Sensor" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="refresh_rate" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SensorSystem">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hasSubsystem" lowerBound="1"
+        upperBound="-1" eType="#//SubSystem" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timeFormat" lowerBound="1"
+        eType="#//AcousticTimeID"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Sensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ElectricSensor" eSuperTypes="#//Sensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//ElectricID"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="alarmValue" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble" defaultValueLiteral="0.0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="notifications" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DistanceSensor" eSuperTypes="#//Sensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxDistanceAccepted" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="minDistanceAccepted" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//DistanceID"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="alarmValue" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble" defaultValueLiteral="0.0"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="notifications" lowerBound="1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" defaultValueLiteral="false"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PressureSensor" eSuperTypes="#//Sensor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="PostureSensor" eSuperTypes="#//Sensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//PostureID"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TframeSensor" eSuperTypes="#//PositionSensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="origin" lowerBound="1"
+        eType="#//TframeOrigins"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" lowerBound="1"
+        eType="#//TframeTargets"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PositionSensor" eSuperTypes="#//Sensor"/>
+  <eClassifiers xsi:type="ecore:EClass" name="VisionSensor" eSuperTypes="#//Sensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//VisionID"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="resolution" lowerBound="1"
+        eType="#//ResolutionID"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SpeedSensor" eSuperTypes="#//Sensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//SpeedID"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PressureSensorHead" eSuperTypes="#//PressureSensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//PressureID_Head"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PressureSensorHand" eSuperTypes="#//PressureSensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//PressureID_Hand"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PressureSensorFoot" eSuperTypes="#//PressureSensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//PressureID_Foot"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PositionSensorRobot" eSuperTypes="#//PositionSensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//PositionID_Robot"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PositionSensorHead" eSuperTypes="#//PositionSensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//PositionID_Head"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PositionSensorFoot" eSuperTypes="#//PositionSensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//PositionID_Foot">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/GenModel">
+        <details key="documentation" value=""/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="AcousticTimeID">
+    <eLiterals name="SECONDS"/>
+    <eLiterals name="MINUTES" value="1"/>
+    <eLiterals name="HOURS" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PositionSensorHand" eSuperTypes="#//PositionSensor">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" lowerBound="1" eType="#//PositionID_Hand"/>
+  </eClassifiers>
+</ecore:EPackage>

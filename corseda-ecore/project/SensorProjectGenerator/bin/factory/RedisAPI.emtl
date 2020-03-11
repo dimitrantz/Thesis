@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:mtl="http://www.eclipse.org/acceleo/mtl/3.0" xmlns:ocl.ecore="http://www.eclipse.org/ocl/1.1.0/Ecore">
+  <mtl:Module name="RedisAPI" nsURI="factory::RedisAPI" startHeaderPosition="83" endHeaderPosition="240">
+    <documentation xsi:type="mtl:ModuleDocumentation">
+      <body startPosition="32" endPosition="80" value="&#xA;The documentation of the module RedisAPI.&#xA;&#xA;"/>
+    </documentation>
+    <input>
+      <takesTypesFrom href="platform:/plugin/SensorProject/model/sensorProject.ecore#/"/>
+    </input>
+    <ownedModuleElement xsi:type="mtl:Template" name="RedisAPI" visibility="Public">
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xA;"/>
+      <body xsi:type="mtl:FileBlock" openMode="OverWrite">
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&quot;&quot;&quot;&#xA;@author: Dimitra Ntzioni&#xA; python 2.7&#xA;&quot;&quot;&quot;&#xA;&#xA;&#xA;# Import the redis-py client package&#xA;import redis&#xA;from ast import literal_eval&#xA;import StringIO&#xA;import json&#xA;from PIL import Image&#xA;import numpy as np&#xA;import matplotlib.pyplot as plt&#xA;&#xA;import wave, struct&#xA;import scipy.io.wavfile&#xA;# Define our connection information for Redis&#xA;# Replaces with your configuration information&#xA;redis_host = &quot;localhost&quot;&#xA;redis_port = 6379&#xA;redis_password = &quot;&quot;&#xA;&#xA;&#xA;# General&#xA;&#xA;def delete_from_redis(key):&#xA;&#xA;    # Create the Redis Connection object&#xA;    r = redis.StrictRedis(host=redis_host, port=redis_port,\&#xA;                              password=redis_password, decode_responses=True)&#xA;    r.delete(key)  &#xA;&#xA;&#xA;def save_sensor_info(key, res):&#xA;    '''Saves to redis the info of a sensor in a specific key: info_name'''&#xA;    &#xA;    # Create the Redis Connection object&#xA;    try:    &#xA;        # The decode_repsonses flag here directs the client to convert the &#xA;        # responses from Redis into Python strings using the default encoding &#xA;        # utf-8.  This is client specific.&#xA;        r = redis.StrictRedis(host=redis_host, port=redis_port,\&#xA;                              password=redis_password, decode_responses=True)&#xA;       &#xA;        new_key = 'info_' + key&#xA;        r.delete(new_key) &#xA;        r.lpush(new_key, str(res))&#xA;      &#xA;    except Exception as e:&#xA;        print(e)&#xA;&#xA;&#xA;def save_categories(value):&#xA;    '''Saves to redis the value entered in a specific key.'''&#xA;        &#xA;    # Create the Redis Connection object&#xA;    try:    &#xA;        # The decode_repsonses flag here directs the client to convert the &#xA;        # responses from Redis into Python strings using the default encoding &#xA;        # utf-8.  This is client specific.&#xA;        r = redis.StrictRedis(host=redis_host, port=redis_port,\&#xA;                              password=redis_password, decode_responses=True)&#xA;       &#xA;        for category in value:&#xA;            r.lpush('categories',category)&#xA;      &#xA;    except Exception as e:&#xA;        print(e)&#xA;&#xA;def save_sensors_parameters(mySensorsIds):&#xA;    '''Saves to redis the value entered in a specific key.'''&#xA;        &#xA;    # Create the Redis Connection object&#xA;    try:    &#xA;        # The decode_repsonses flag here directs the client to convert the &#xA;        # responses from Redis into Python strings using the default encoding &#xA;        # utf-8.  This is client specific.&#xA;        r = redis.StrictRedis(host=redis_host, port=redis_port,\&#xA;                              password=redis_password, decode_responses=True)&#xA;       &#xA;        r.delete('sensors_parameters')&#xA;        for title in mySensorsIds:&#xA;            r.lpush('sensors_parameters', title)&#xA;      &#xA;    except Exception as e:&#xA;        print(e)&#xA;&#xA;def save_measurement(key, value):&#xA;    '''Saves to redis the value entered in a specific key.'''&#xA;        &#xA;    # Create the Redis Connection object&#xA;    try:    &#xA;        # The decode_repsonses flag here directs the client to convert the &#xA;        # responses from Redis into Python strings using the default encoding &#xA;        # utf-8.  This is client specific.&#xA;        r = redis.StrictRedis(host=redis_host, port=redis_port,\&#xA;                              password=redis_password, decode_responses=True)&#xA;       &#xA;        # Set the message in Redis &#xA;        r.lpush(key, str(value))&#xA;      &#xA;    except Exception as e:&#xA;        print(e)&#xA;&#xA;&#xA;"/>
+        <body xsi:type="mtl:ForBlock">
+          <body xsi:type="mtl:IfBlock">
+            <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="# Acoustic    &#xA;&#xA;def save_audio(key, name, timestamp):&#xA;    '''Saves to redis the audio file in a specific key.'''&#xA;    &#xA;    &#xA;    try:    &#xA;        # The decode_repsonses flag here directs the client to convert the &#xA;        # responses from Redis into Python strings using the default encoding &#xA;        # utf-8.  This is client specific.&#xA;        r = redis.StrictRedis(host=redis_host, port=redis_port,\&#xA;                              password=redis_password, decode_responses=True)&#xA;&#xA;&#xA;        r.lpush(key, str({&quot;data&quot;: name, &quot;timestamp&quot;: timestamp}))&#xA;        &#xA;    except Exception as e:&#xA;        print(e)&#xA;"/>
+            <ifExpr xsi:type="ocl.ecore:OperationCallExp">
+              <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+              <source xsi:type="ocl.ecore:OperationCallExp">
+                <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                <source xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_OclAny_Class/toString">
+                  <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                  <source xsi:type="ocl.ecore:VariableExp" name="category" referredVariable="/0/RedisAPI/%.1/%.1/category">
+                    <eType xsi:type="ecore:EEnum" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//Category"/>
+                  </source>
+                </source>
+                <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String_Class/toUpper"/>
+              </source>
+              <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="ACOUSTIC">
+                <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+              </argument>
+              <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String_Class/="/>
+            </ifExpr>
+          </body>
+          <loopVariable name="category">
+            <eType xsi:type="ecore:EEnum" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//Category"/>
+          </loopVariable>
+          <iterSet xsi:type="ocl.ecore:OperationCallExp" eType="/9/OrderedSet(Category)">
+            <source xsi:type="ocl.ecore:IteratorExp" name="collect" eType="/9/Sequence(Category)">
+              <source xsi:type="ocl.ecore:PropertyCallExp" eType="/9/OrderedSet(SubSystem)">
+                <source xsi:type="ocl.ecore:VariableExp" name="aSensorSystem" referredVariable="/0/RedisAPI/aSensorSystem">
+                  <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+                </source>
+                <referredProperty xsi:type="ecore:EReference" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem/hasSubsystem"/>
+              </source>
+              <body xsi:type="ocl.ecore:PropertyCallExp">
+                <eType xsi:type="ecore:EEnum" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//Category"/>
+                <source xsi:type="ocl.ecore:VariableExp" name="temp1" referredVariable="/0/RedisAPI/%.1/%.1/%.1/collect/temp1">
+                  <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SubSystem"/>
+                </source>
+                <referredProperty xsi:type="ecore:EAttribute" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SubSystem/category"/>
+              </body>
+              <iterator xsi:type="ocl.ecore:Variable" name="temp1">
+                <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SubSystem"/>
+              </iterator>
+            </source>
+            <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Sequence(T)_Class/asOrderedSet"/>
+          </iterSet>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xA;"/>
+        <body xsi:type="mtl:ForBlock">
+          <body xsi:type="mtl:IfBlock">
+            <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="# Vision   &#xA;&#xA;def save_image(key, name, timestamp):&#xA;    '''Saves to redis the images in a specific key.'''&#xA;    &#xA;    try:    &#xA;        # The decode_repsonses flag here directs the client to convert the &#xA;        # responses from Redis into Python strings using the default encoding &#xA;        # utf-8.  This is client specific.&#xA;        r = redis.StrictRedis(host=redis_host, port=redis_port,\&#xA;                              password=redis_password, decode_responses=True)&#xA;&#xA;        r.lpush(key, str({&quot;data&quot;: name, &quot;timestamp&quot;: timestamp}))&#xA;        &#xA;    except Exception as e:&#xA;        print(e)&#xA;    &#xA;"/>
+            <ifExpr xsi:type="ocl.ecore:OperationCallExp">
+              <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Boolean"/>
+              <source xsi:type="ocl.ecore:OperationCallExp">
+                <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                <source xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_OclAny_Class/toString">
+                  <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+                  <source xsi:type="ocl.ecore:VariableExp" name="category" referredVariable="/0/RedisAPI/%.1/%.3/category">
+                    <eType xsi:type="ecore:EEnum" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//Category"/>
+                  </source>
+                </source>
+                <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String_Class/toUpper"/>
+              </source>
+              <argument xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="VISION">
+                <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+              </argument>
+              <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String_Class/="/>
+            </ifExpr>
+          </body>
+          <loopVariable name="category">
+            <eType xsi:type="ecore:EEnum" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//Category"/>
+          </loopVariable>
+          <iterSet xsi:type="ocl.ecore:OperationCallExp" eType="/9/OrderedSet(Category)">
+            <source xsi:type="ocl.ecore:IteratorExp" name="collect" eType="/9/Sequence(Category)">
+              <source xsi:type="ocl.ecore:PropertyCallExp" eType="/9/OrderedSet(SubSystem)">
+                <source xsi:type="ocl.ecore:VariableExp" name="aSensorSystem" referredVariable="/0/RedisAPI/aSensorSystem">
+                  <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+                </source>
+                <referredProperty xsi:type="ecore:EReference" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem/hasSubsystem"/>
+              </source>
+              <body xsi:type="ocl.ecore:PropertyCallExp">
+                <eType xsi:type="ecore:EEnum" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//Category"/>
+                <source xsi:type="ocl.ecore:VariableExp" name="temp1" referredVariable="/0/RedisAPI/%.1/%.3/%.1/collect/temp2">
+                  <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SubSystem"/>
+                </source>
+                <referredProperty xsi:type="ecore:EAttribute" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SubSystem/category"/>
+              </body>
+              <iterator xsi:type="ocl.ecore:Variable" name="temp2">
+                <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SubSystem"/>
+              </iterator>
+            </source>
+            <referredOperation xsi:type="ecore:EOperation" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Sequence(T)_Class/asOrderedSet"/>
+          </iterSet>
+        </body>
+        <fileUrl xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="factory/saveToRedis.py">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </fileUrl>
+        <charset xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="UTF-8">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </charset>
+      </body>
+      <documentation xsi:type="mtl:ModuleElementDocumentation">
+        <body startPosition="166" endPosition="240" value="&#xA;The documentation of the template RedisAPI.&#xA;@param aSensorSystem&#xA;&#xA;"/>
+        <parametersDocumentation name="aSensorSystem">
+          <body value=""/>
+        </parametersDocumentation>
+      </documentation>
+      <parameter name="aSensorSystem">
+        <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+      </parameter>
+      <post xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/trim">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <source xsi:type="ocl.ecore:VariableExp" name="self" referredVariable="/5">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </source>
+      </post>
+    </ownedModuleElement>
+  </mtl:Module>
+  <ecore:EPackage name="additions">
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_String_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+      </eAnnotations>
+      <eOperations name="trim">
+        <eAnnotations source="MTL non-standard"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+      </eOperations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Integer_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Real_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Real"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ecore_EObject_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+      </eAnnotations>
+      <eOperations name="RedisAPI">
+        <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+          <contents xsi:type="ocl.ecore:Constraint"/>
+        </eAnnotations>
+        <eAnnotations source="MTL" references="/0/RedisAPI"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <eParameters name="aSensorSystem">
+          <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+        </eParameters>
+      </eOperations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_OclAny_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny"/>
+      </eAnnotations>
+      <eOperations name="toString">
+        <eAnnotations source="MTL non-standard"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+      </eOperations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Collection(T)_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Collection(T)"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Sequence(T)_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Sequence(T)"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_OrderedSet(T)_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OrderedSet(T)"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="sensorProject_SensorSystem_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+      </eAnnotations>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ecore:EPackage name="collections">
+    <eClassifiers xsi:type="ocl.ecore:OrderedSetType" name="OrderedSet(SubSystem)" instanceClassName="java.util.LinkedHashSet">
+      <elementType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SubSystem"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:SequenceType" name="Sequence(Category)" instanceClassName="java.util.List">
+      <elementType xsi:type="ecore:EEnum" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//Category"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ocl.ecore:OrderedSetType" name="OrderedSet(Category)" instanceClassName="java.util.LinkedHashSet">
+      <elementType xsi:type="ecore:EEnum" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//Category"/>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EEnum" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//Category"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EEnum" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//Category"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="i">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EEnum" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//Category"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EEnum" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//Category"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="i">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ecore:EAnnotation source="positions">
+    <eAnnotations source="positions.0" references="/0/%">
+      <details key="start" value="29"/>
+      <details key="end" value="82"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.1" references="/0/RedisAPI">
+      <details key="start" value="243"/>
+      <details key="end" value="5147"/>
+      <details key="line" value="12"/>
+    </eAnnotations>
+    <eAnnotations source="positions.2" references="/0/RedisAPI/%">
+      <details key="start" value="312"/>
+      <details key="end" value="313"/>
+      <details key="line" value="13"/>
+    </eAnnotations>
+    <eAnnotations source="positions.3" references="/0/RedisAPI/%.1">
+      <details key="start" value="313"/>
+      <details key="end" value="5135"/>
+      <details key="line" value="14"/>
+    </eAnnotations>
+    <eAnnotations source="positions.4" references="/0/RedisAPI/%.1/%">
+      <details key="start" value="363"/>
+      <details key="end" value="3647"/>
+      <details key="line" value="15"/>
+    </eAnnotations>
+    <eAnnotations source="positions.5" references="/0/RedisAPI/%.1/%.1">
+      <details key="start" value="3647"/>
+      <details key="end" value="4391"/>
+      <details key="line" value="121"/>
+    </eAnnotations>
+    <eAnnotations source="positions.6" references="/0/RedisAPI/%.1/%.1/%">
+      <details key="start" value="3730"/>
+      <details key="end" value="4384"/>
+      <details key="line" value="122"/>
+    </eAnnotations>
+    <eAnnotations source="positions.7" references="/0/RedisAPI/%.1/%.1/%/%">
+      <details key="start" value="3780"/>
+      <details key="end" value="4378"/>
+      <details key="line" value="123"/>
+    </eAnnotations>
+    <eAnnotations source="positions.8" references="/0/RedisAPI/%.1/%.1/%/%.1">
+      <details key="start" value="3734"/>
+      <details key="end" value="3778"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.9" references="/0/RedisAPI/%.1/%.1/%/%.1/%">
+      <details key="start" value="3735"/>
+      <details key="end" value="3764"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.10" references="/0/RedisAPI/%.1/%.1/%/%.1/%/%">
+      <details key="start" value="3735"/>
+      <details key="end" value="3754"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.11" references="/0/RedisAPI/%.1/%.1/%/%.1/%/%/category">
+      <details key="start" value="3735"/>
+      <details key="end" value="3743"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.12" references="/0/RedisAPI/%.1/%.1/%/%.1/%.1">
+      <details key="start" value="3767"/>
+      <details key="end" value="3777"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.13" references="/0/RedisAPI/%.1/%.1/category">
+      <details key="start" value="3653"/>
+      <details key="end" value="3671"/>
+      <details key="line" value="121"/>
+    </eAnnotations>
+    <eAnnotations source="positions.14" references="/0/RedisAPI/%.1/%.1/%.1">
+      <details key="start" value="3675"/>
+      <details key="end" value="3726"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.15" references="/0/RedisAPI/%.1/%.1/%.1/collect">
+      <details key="start" value="3675"/>
+      <details key="end" value="3710"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.16" references="/0/RedisAPI/%.1/%.1/%.1/collect/%">
+      <details key="start" value="3675"/>
+      <details key="end" value="3701"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.17" references="/0/RedisAPI/%.1/%.1/%.1/collect/%/aSensorSystem">
+      <details key="start" value="3675"/>
+      <details key="end" value="3688"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.18" references="/0/RedisAPI/%.1/%.1/%.1/collect/%.1">
+      <details key="start" value="3702"/>
+      <details key="end" value="3710"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.19" references="/0/RedisAPI/%.1/%.1/%.1/collect/%.1/temp1">
+      <details key="start" value="-1"/>
+      <details key="end" value="-1"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.20" references="/0/RedisAPI/%.1/%.1/%.1/collect/temp1">
+      <details key="start" value="-1"/>
+      <details key="end" value="-1"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.21" references="/0/RedisAPI/%.1/%.2">
+      <details key="start" value="4392"/>
+      <details key="end" value="4393"/>
+      <details key="line" value="143"/>
+    </eAnnotations>
+    <eAnnotations source="positions.22" references="/0/RedisAPI/%.1/%.3">
+      <details key="start" value="4393"/>
+      <details key="end" value="5127"/>
+      <details key="line" value="144"/>
+    </eAnnotations>
+    <eAnnotations source="positions.23" references="/0/RedisAPI/%.1/%.3/%">
+      <details key="start" value="4476"/>
+      <details key="end" value="5120"/>
+      <details key="line" value="145"/>
+    </eAnnotations>
+    <eAnnotations source="positions.24" references="/0/RedisAPI/%.1/%.3/%/%">
+      <details key="start" value="4524"/>
+      <details key="end" value="5114"/>
+      <details key="line" value="146"/>
+    </eAnnotations>
+    <eAnnotations source="positions.25" references="/0/RedisAPI/%.1/%.3/%/%.1">
+      <details key="start" value="4480"/>
+      <details key="end" value="4522"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.26" references="/0/RedisAPI/%.1/%.3/%/%.1/%">
+      <details key="start" value="4481"/>
+      <details key="end" value="4510"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.27" references="/0/RedisAPI/%.1/%.3/%/%.1/%/%">
+      <details key="start" value="4481"/>
+      <details key="end" value="4500"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.28" references="/0/RedisAPI/%.1/%.3/%/%.1/%/%/category">
+      <details key="start" value="4481"/>
+      <details key="end" value="4489"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.29" references="/0/RedisAPI/%.1/%.3/%/%.1/%.1">
+      <details key="start" value="4513"/>
+      <details key="end" value="4521"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.30" references="/0/RedisAPI/%.1/%.3/category">
+      <details key="start" value="4399"/>
+      <details key="end" value="4417"/>
+      <details key="line" value="144"/>
+    </eAnnotations>
+    <eAnnotations source="positions.31" references="/0/RedisAPI/%.1/%.3/%.1">
+      <details key="start" value="4421"/>
+      <details key="end" value="4472"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.32" references="/0/RedisAPI/%.1/%.3/%.1/collect">
+      <details key="start" value="4421"/>
+      <details key="end" value="4456"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.33" references="/0/RedisAPI/%.1/%.3/%.1/collect/%">
+      <details key="start" value="4421"/>
+      <details key="end" value="4447"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.34" references="/0/RedisAPI/%.1/%.3/%.1/collect/%/aSensorSystem">
+      <details key="start" value="4421"/>
+      <details key="end" value="4434"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.35" references="/0/RedisAPI/%.1/%.3/%.1/collect/%.1">
+      <details key="start" value="4448"/>
+      <details key="end" value="4456"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.36" references="/0/RedisAPI/%.1/%.3/%.1/collect/%.1/temp1">
+      <details key="start" value="-1"/>
+      <details key="end" value="-1"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.37" references="/0/RedisAPI/%.1/%.3/%.1/collect/temp2">
+      <details key="start" value="-1"/>
+      <details key="end" value="-1"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.38" references="/0/RedisAPI/%.1/%.4">
+      <details key="start" value="320"/>
+      <details key="end" value="344"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.39" references="/0/RedisAPI/%.1/%.5">
+      <details key="start" value="353"/>
+      <details key="end" value="360"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.40" references="/0/RedisAPI/%.2">
+      <details key="start" value="163"/>
+      <details key="end" value="242"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.41" references="/0/RedisAPI/%.2/aSensorSystem">
+      <details key="start" value="-1"/>
+      <details key="end" value="-1"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.42" references="/0/RedisAPI/aSensorSystem">
+      <details key="start" value="269"/>
+      <details key="end" value="296"/>
+      <details key="line" value="12"/>
+    </eAnnotations>
+    <eAnnotations source="positions.43" references="/0/RedisAPI/%.3">
+      <details key="start" value="303"/>
+      <details key="end" value="309"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.44" references="/0/RedisAPI/%.3/self">
+      <details key="start" value="-1"/>
+      <details key="end" value="-1"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+  </ecore:EAnnotation>
+</xmi:XMI>

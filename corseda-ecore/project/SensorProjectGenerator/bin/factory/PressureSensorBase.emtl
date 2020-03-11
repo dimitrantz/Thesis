@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:mtl="http://www.eclipse.org/acceleo/mtl/3.0" xmlns:ocl.ecore="http://www.eclipse.org/ocl/1.1.0/Ecore">
+  <mtl:Module name="PressureSensorBase" nsURI="factory::PressureSensorBase" startHeaderPosition="93" endHeaderPosition="267">
+    <documentation xsi:type="mtl:ModuleDocumentation">
+      <body startPosition="32" endPosition="90" value="&#xA;The documentation of the module PressureSensorBase.&#xA;&#xA;"/>
+    </documentation>
+    <input>
+      <takesTypesFrom href="platform:/plugin/SensorProject/model/sensorProject.ecore#/"/>
+    </input>
+    <ownedModuleElement xsi:type="mtl:Template" name="PressureSensorBase" visibility="Public">
+      <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xA;"/>
+      <body xsi:type="mtl:FileBlock" openMode="OverWrite">
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&quot;&quot;&quot;&#xA;@author: Dimitra Ntzioni&#xA; python 2.7&#xA;&quot;&quot;&quot;&#xA;&#xA;import time&#xA;&#xA;import saveToRedis as redisAPI&#xA;from sensor import Sensor&#xA;&#xA;import R4ARobotRestApi as api # R4A Library&#xA;from R4ARobotWsApi import RobotWsAPI as rws # R4A Library&#xA;&#xA;api.configuration.api_key"/>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="[">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="'api_key'"/>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="]">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=" = 'r4a_default_key'&#xA;api.configuration.host = 'localhost:8080'&#xA;    &#xA;&#xA;#  Pressure Sensors         &#xA;class PressureSensor(Sensor):&#xA;    '''Common base class for a PressureSensor'''&#xA;&#x9;&#xA;    def __init__(self):&#xA;        &#xA;        Sensor.__init__(self)&#xA;        &#xA;        self.category = 'PRESSURE'&#xA;        self.controller = api.SensorsPressureApi()&#xA;        self.name = 'PressureSensor'&#xA;        self.type = 'RFoot_Bumper_Right'&#xA;&#xA;&#xA;    def get_pressure_sensor(self):&#xA;        '''Function returning a string containing the description of an&#xA;           pressure sensor.'''&#xA;        &#xA;        res = self.controller.getPressureSensor(self.type)&#xA;        redisAPI.save_sensor_info(self.name, res)&#xA;&#xA;    def get_pressure_measurement(self):&#xA;        '''Function returning the last measurement of a sensor.'''&#xA;                       &#xA;        res = self.controller.getPressureMeasurement(self.type) &#xA;        &#xA;        &#xA;        if (hasattr(res, 'data')):&#xA;&#xA;            redisAPI.save_measurement(self.name,res)&#xA;&#xA;        elif (hasattr(res, 'error')):&#xA;&#xA;            redisAPI.save_measurement(self.name,{'data': res"/>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="[">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="'error'"/>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="]">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol=", 'timestamp':res"/>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="[">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="'timestamp'"/>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="]">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="})&#xA;        &#xA;        else:&#xA;            &#xA;            tempArray = "/>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="[">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&quot;ERROR Pressure Measurement&quot;,time.time()"/>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="]">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </body>
+        <body xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="&#xA;            print tempArray&#xA;&#xA;    def start_measuring(self):&#xA;        '''Gets a measurement of the pressure sensor every 1/max_hz seconds'''&#xA;&#xA;        endtime = time.time() + self.duration&#xA;&#xA;          &#xA;        # timer's argument in sec&#xA;        while time.time() &lt; endtime:&#xA;&#xA;            start = time.time()&#xA;            self.get_pressure_measurement()&#xA;            time_elapsed = time.time() - start&#xA;&#xA;            if self.frequency > time_elapsed:&#xA;                time.sleep(self.frequency - time_elapsed)  &#xA;      &#xA;&#xA;"/>
+        <fileUrl xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="factory/pressureSensor.py">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </fileUrl>
+        <charset xsi:type="ocl.ecore:StringLiteralExp" stringSymbol="UTF-8">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </charset>
+      </body>
+      <documentation xsi:type="mtl:ModuleElementDocumentation">
+        <body startPosition="186" endPosition="267" value="&#xA;The documentation of the template generateElement.&#xA;@param aSensorSystem&#xA;&#xA;"/>
+        <parametersDocumentation name="aSensorSystem">
+          <body value=""/>
+        </parametersDocumentation>
+      </documentation>
+      <parameter name="aSensorSystem">
+        <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+      </parameter>
+      <post xsi:type="ocl.ecore:OperationCallExp" referredOperation="/1/oclstdlib_String_Class/trim">
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <source xsi:type="ocl.ecore:VariableExp" name="self" referredVariable="/5">
+          <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        </source>
+      </post>
+    </ownedModuleElement>
+  </mtl:Module>
+  <ecore:EPackage name="additions">
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_String_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+      </eAnnotations>
+      <eOperations name="trim">
+        <eAnnotations source="MTL non-standard"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+      </eOperations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Integer_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Integer"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Real_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Real"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ecore_EObject_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+      </eAnnotations>
+      <eOperations name="PressureSensorBase">
+        <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+          <contents xsi:type="ocl.ecore:Constraint"/>
+        </eAnnotations>
+        <eAnnotations source="MTL" references="/0/PressureSensorBase"/>
+        <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+        <eParameters name="aSensorSystem">
+          <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+        </eParameters>
+      </eOperations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_OclAny_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OclAny"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Collection(T)_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Collection(T)"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_Sequence(T)_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/Sequence(T)"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="oclstdlib_OrderedSet(T)_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/OrderedSet(T)"/>
+      </eAnnotations>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="sensorProject_SensorSystem_Class">
+      <eAnnotations source="http://www.eclipse.org/ocl/1.1.0/OCL">
+        <references href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+      </eAnnotations>
+    </eClassifiers>
+  </ecore:EPackage>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ocl.ecore:PrimitiveType" href="http://www.eclipse.org/ocl/1.1.0/oclstdlib.ecore#/0/String"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="platform:/plugin/SensorProject/model/sensorProject.ecore#//SensorSystem"/>
+  </ocl.ecore:Variable>
+  <ocl.ecore:Variable name="self">
+    <eType xsi:type="ecore:EClass" href="http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+  </ocl.ecore:Variable>
+  <ecore:EAnnotation source="positions">
+    <eAnnotations source="positions.0" references="/0/%">
+      <details key="start" value="29"/>
+      <details key="end" value="92"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.1" references="/0/PressureSensorBase">
+      <details key="start" value="270"/>
+      <details key="end" value="2448"/>
+      <details key="line" value="12"/>
+    </eAnnotations>
+    <eAnnotations source="positions.2" references="/0/PressureSensorBase/%">
+      <details key="start" value="349"/>
+      <details key="end" value="350"/>
+      <details key="line" value="13"/>
+    </eAnnotations>
+    <eAnnotations source="positions.3" references="/0/PressureSensorBase/%.1">
+      <details key="start" value="350"/>
+      <details key="end" value="2436"/>
+      <details key="line" value="14"/>
+    </eAnnotations>
+    <eAnnotations source="positions.4" references="/0/PressureSensorBase/%.1/%">
+      <details key="start" value="403"/>
+      <details key="end" value="648"/>
+      <details key="line" value="15"/>
+    </eAnnotations>
+    <eAnnotations source="positions.5" references="/0/PressureSensorBase/%.1/%.1">
+      <details key="start" value="649"/>
+      <details key="end" value="652"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.6" references="/0/PressureSensorBase/%.1/%.2">
+      <details key="start" value="654"/>
+      <details key="end" value="663"/>
+      <details key="line" value="28"/>
+    </eAnnotations>
+    <eAnnotations source="positions.7" references="/0/PressureSensorBase/%.1/%.3">
+      <details key="start" value="664"/>
+      <details key="end" value="667"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.8" references="/0/PressureSensorBase/%.1/%.4">
+      <details key="start" value="669"/>
+      <details key="end" value="1746"/>
+      <details key="line" value="28"/>
+    </eAnnotations>
+    <eAnnotations source="positions.9" references="/0/PressureSensorBase/%.1/%.5">
+      <details key="start" value="1747"/>
+      <details key="end" value="1750"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.10" references="/0/PressureSensorBase/%.1/%.6">
+      <details key="start" value="1752"/>
+      <details key="end" value="1759"/>
+      <details key="line" value="65"/>
+    </eAnnotations>
+    <eAnnotations source="positions.11" references="/0/PressureSensorBase/%.1/%.7">
+      <details key="start" value="1760"/>
+      <details key="end" value="1763"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.12" references="/0/PressureSensorBase/%.1/%.8">
+      <details key="start" value="1765"/>
+      <details key="end" value="1782"/>
+      <details key="line" value="65"/>
+    </eAnnotations>
+    <eAnnotations source="positions.13" references="/0/PressureSensorBase/%.1/%.9">
+      <details key="start" value="1783"/>
+      <details key="end" value="1786"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.14" references="/0/PressureSensorBase/%.1/%.10">
+      <details key="start" value="1788"/>
+      <details key="end" value="1799"/>
+      <details key="line" value="65"/>
+    </eAnnotations>
+    <eAnnotations source="positions.15" references="/0/PressureSensorBase/%.1/%.11">
+      <details key="start" value="1800"/>
+      <details key="end" value="1803"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.16" references="/0/PressureSensorBase/%.1/%.12">
+      <details key="start" value="1805"/>
+      <details key="end" value="1868"/>
+      <details key="line" value="65"/>
+    </eAnnotations>
+    <eAnnotations source="positions.17" references="/0/PressureSensorBase/%.1/%.13">
+      <details key="start" value="1869"/>
+      <details key="end" value="1872"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.18" references="/0/PressureSensorBase/%.1/%.14">
+      <details key="start" value="1874"/>
+      <details key="end" value="1914"/>
+      <details key="line" value="69"/>
+    </eAnnotations>
+    <eAnnotations source="positions.19" references="/0/PressureSensorBase/%.1/%.15">
+      <details key="start" value="1915"/>
+      <details key="end" value="1918"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.20" references="/0/PressureSensorBase/%.1/%.16">
+      <details key="start" value="1920"/>
+      <details key="end" value="2429"/>
+      <details key="line" value="70"/>
+    </eAnnotations>
+    <eAnnotations source="positions.21" references="/0/PressureSensorBase/%.1/%.17">
+      <details key="start" value="357"/>
+      <details key="end" value="384"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.22" references="/0/PressureSensorBase/%.1/%.18">
+      <details key="start" value="393"/>
+      <details key="end" value="400"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.23" references="/0/PressureSensorBase/%.2">
+      <details key="start" value="183"/>
+      <details key="end" value="269"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.24" references="/0/PressureSensorBase/%.2/aSensorSystem">
+      <details key="start" value="-1"/>
+      <details key="end" value="-1"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.25" references="/0/PressureSensorBase/aSensorSystem">
+      <details key="start" value="306"/>
+      <details key="end" value="333"/>
+      <details key="line" value="12"/>
+    </eAnnotations>
+    <eAnnotations source="positions.26" references="/0/PressureSensorBase/%.3">
+      <details key="start" value="340"/>
+      <details key="end" value="346"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+    <eAnnotations source="positions.27" references="/0/PressureSensorBase/%.3/self">
+      <details key="start" value="-1"/>
+      <details key="end" value="-1"/>
+      <details key="line" value="0"/>
+    </eAnnotations>
+  </ecore:EAnnotation>
+</xmi:XMI>
