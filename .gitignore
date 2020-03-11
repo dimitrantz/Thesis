@@ -2,7 +2,9 @@
 corseda.node_modules 
 corseda/*.json 
 corseda/README.md 
+
 .DS_Store 
+
 .vscode
 .vscode/*.json
 flask_app/*.pyc 
