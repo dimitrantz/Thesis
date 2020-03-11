@@ -20,34 +20,35 @@ redis_host = "localhost"
 redis_port = 6379
 redis_password = ""
 
+
+# Basic html page with information about my Thesis
 @app.route('/', methods=['GET'])
 @app.route('/index', methods=['GET'])
 def home():
     return render_template('index.html')
 
 
-
+# Thesis logo
 @app.route('/logo')
 def get_logo():
     return send_from_directory('./templates', 'logo_corseda.png')
 
 
-
+# to retreive the sensors categories
 @app.route('/categories')
 def get_categories():
 
     categories_ids = retrieve_categories()
     return jsonify({'categories': categories_ids})
     
-
-
+# retreive info related to specific sensor
 @app.route('/info/<name>')
 def get_info(name):
     redisInfo = retrieve_sensor_info(name)
     return jsonify({'sensor_info': redisInfo})
 
 
-
+# retreive all sensors' parameters for the generated sensors representation
 @app.route('/sensors_parameters')
 def get_sensors_parameters():  
     
@@ -57,7 +58,7 @@ def get_sensors_parameters():
     return jsonify({'sensors_parameters': redisDiagramTitles})
    
 
-
+# retreive parameters for a specific sensor by its name
 @app.route('/sensors_parameters/<name>')
 def get_sensor_parameters(name):  
     
@@ -69,7 +70,7 @@ def get_sensor_parameters(name):
             return jsonify({'sensor_parameters': sensor})
 
 
-
+# retreive all sensors' names
 @app.route('/sensors_parameters/names')
 def get_sensor_parameters_names():  
     
@@ -82,7 +83,7 @@ def get_sensor_parameters_names():
     return jsonify({'sensors_names': names})
  
 
-
+# retreive all sensors' names based on a specific category
 @app.route('/sensors_parameters/category/<name>')
 def get_sensors_per_category(name):  
     
@@ -95,7 +96,7 @@ def get_sensors_per_category(name):
     return jsonify({'category_sensors': sensors})
     
 
-
+# retreive all measurements for a specific sensor
 @app.route('/measurements/all/<name>')
 def get_all_measurements(name):
     
@@ -113,7 +114,7 @@ def get_all_measurements(name):
     return jsonify({'error': "Unexpected Error, sensors_patameters are not retrieved from redis database"})
 
 
-
+# retreive the last measurements selected for a specific sensor 
 @app.route('/measurements/last/<name>/<number>')
 def get_last_measurements(name, number):
     
@@ -130,7 +131,7 @@ def get_last_measurements(name, number):
     return jsonify({'error': "error"})
 
 
-
+# retreive the last measurement for a specific sensor 
 @app.route('/measurements/last/<name>')
 def get_last_measurement(name):
     
@@ -147,7 +148,8 @@ def get_last_measurement(name):
             
 
 
-
+# retreive a measurement for a specific sensor using its name
+# mostly used to retreive audio kai image data
 @app.route('/measurement/one/<sensorName>/<name>')
 def get_image(sensorName,name):
     def generate(path):
@@ -191,8 +193,6 @@ def get_image(sensorName,name):
                 return Response(generate(path), mimetype="audio/x-wav")
     
 
-
-
 def retrieve_sensor_info(key):
     '''Retrieves from redis technical information about a sensor of the system.'''
 
@@ -211,6 +211,7 @@ def retrieve_sensor_info(key):
 
 
 def retrieve_sensors_parameters():
+    '''Retrieves all sensors' parameters for the generated sensors representation'''
 
     r = redis.StrictRedis(host=redis_host, port=redis_port,\
                           password=redis_password, decode_responses=True)
