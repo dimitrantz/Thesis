@@ -26,7 +26,7 @@ Following the Help->Install New Software,  choose as a repository the version wh
 Then again, following the Help->Install New Software,  choose as a repository the version where you downloaded eclipse and enter 'Acceleo' in the search bar.
 Your setup for Eclipse Modeling Tools is now ready to go.
 
-### Install Corseda
+### Import Corseda
 
 - Import as project file the two folders SensorProject, SensorProjectGenerator and SensorProjectGenerator.ui
 
