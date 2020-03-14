@@ -16,6 +16,9 @@ To test and evaluate this system, experiments were performed on the robot NAO, a
 
 
 ## Results
+After research and multiple iterations I concluded to the below meta model to represent all concepts in this particular project. 
+![metamodel definition](https://github.com/dimitrantz/Thesis/blob/master/thesis%20presentation/results-images/meta-model%20definition.png)
+
 The image below represents a system of eight sensors as designed by a user. The sensors are seperated based on their category and their attributes are already defined.
 ![A sensor system](https://github.com/dimitrantz/Thesis/blob/master/thesis%20presentation/results-images/representation%20of%20a%20sensor%20system%20as%20designed%20by%20a%20user.png)
 
