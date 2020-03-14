@@ -28,7 +28,8 @@ Your setup for Eclipse Modeling Tools is now ready to go.
 
 ### Import Corseda
 
-- Import as project file the two folders SensorProject, SensorProjectGenerator and SensorProjectGenerator.ui
+- Import as project file the two folders SensorProject,     SensorProjectGenerator and SensorProjectGenerator.ui
+
 
 - Double click on SensorProject, in the model file right click on sensorProject.genmodel and select GenerateAll
 
