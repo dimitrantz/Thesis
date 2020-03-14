@@ -1,6 +1,7 @@
 # Thesis
 Automatic generation of high-level interfaces to collect robot sensor data using the R4A platform
 
+
 ## Abstract
 In software engineering, the term automatic programming describes a mechanism that creates a program which in turn allows scientists to code at a higher level of abstraction. Nowadays, robot applications, both in business and home environments are gaining traction, increasing the need for automatic software generation without errors. It is well known that robots are equipped with multitude of sensors, which play a key role in their operation and in accomplishing certain tasks. For this reason, it is often necessary to control the produced data, in order to build software systems. This diploma thesis aspires to take the first steps towards the process of automating the development of ready-to-run interfaces to collect robot sensor data.
 
