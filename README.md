@@ -23,10 +23,11 @@ Based on my model and its implementation the above system generates automaticall
 ![List of APIs](https://github.com/dimitrantz/Thesis/blob/master/thesis%20presentation/results-images/APIs%20that%20were%20generated%20automatically%20based%20on%20a%20specific%20sensor%20system.png)
 
 Once the APIs are generated, they can be used in order to show the collected data in the web application that was designed for this reason.
+
 This is an instance of the web application while collecting data from robot microphones.
 ![collecting data from robot microphones](https://github.com/dimitrantz/Thesis/blob/master/thesis%20presentation/results-images/instance%20of%20the%20web%20application%20while%20collecting%20data%20from%20robot%20microphones.png)
 This is an instance of the web application while collecting data from pressure sensors.
-![collecting data from robot pressure sensors](https://github.com/dimitrantz/Thesis/blob/master/thesis%20presentation/results-images/instance%20of%20the%20web%20application%20while%20collecting%20data%20from%20robot%20microphones.png)
+![collecting data from robot pressure sensors](https://github.com/dimitrantz/Thesis/blob/master/thesis%20presentation/results-images/instance%20of%20the%20web%20application%20while%20collecting%20data%20from%20pressure%20sensors.png)
 
 ## Dependencies
 ```pip install -r requirements.txt```
